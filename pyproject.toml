@@ -1,0 +1,51 @@
+[project]
+name = "grind-t-cbr-ratings"
+version = "0.1.0"
+description = "Async Python client for the Bank of Russia credit ratings registry"
+readme = "README.md"
+authors = [
+    { name = "grind-t", email = "grindt.gd@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "httpx>=0.28.1",
+    "pydantic>=2.13.5",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.9,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "cbr_ratings"
+
+# The official T-Invest SDK is not on PyPI.
+[[tool.uv.index]]
+name = "tbank"
+url = "https://opensource.tbank.ru/api/v4/projects/238/packages/pypi/simple"
+explicit = true
+
+[tool.uv.sources]
+t-tech-investments = { index = "tbank" }
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+markers = ["e2e: hits the live ratings.cbr.ru API"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[dependency-groups]
+dev = [
+    "brotli>=1.2.0",
+    "grind-t-moex>=0.1.0",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.16.10",
+    "t-tech-investments>=1.51.0",
+    "ty>=0.0.84",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Literal values copied verbatim from the ratings.cbr.ru search form.
+"src/cbr_ratings/schema.py" = ["E501"]

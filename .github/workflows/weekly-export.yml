@@ -1,0 +1,72 @@
+name: Weekly Export
+
+on:
+  schedule:
+    - cron: "0 2 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-export
+
+jobs:
+  export:
+    name: Export ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      matrix:
+        name: [issuers, bonds]
+    env:
+      T_INVEST_READONLY_TOKEN: ${{ secrets.T_INVEST_READONLY_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+
+      - name: Export data
+        run: uv run --locked scripts/export_${{ matrix.name }}.py
+
+      - name: Upload export
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.name }}-export
+          path: exports/${{ matrix.name }}.json.br
+          if-no-files-found: error
+
+  commit-exports:
+    name: Commit and push exports if changed
+    runs-on: ubuntu-latest
+    needs: export
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Download exports
+        uses: actions/download-artifact@v8
+        with:
+          pattern: "*-export"
+          path: exports
+          merge-multiple: true
+
+      - name: Commit and push exports if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add exports/issuers.json.br exports/bonds.json.br
+
+          if git diff --cached --quiet; then
+            echo "No export changes detected."
+            exit 0
+          fi
+
+          git commit -m "chore(exports): weekly bond ratings update"
+          git push
