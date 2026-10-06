@@ -1,11 +1,4 @@
-from datetime import date, datetime
-from typing import Annotated, Literal, Self
-
-from pydantic import BaseModel, BeforeValidator, ConfigDict
-from pydantic.alias_generators import to_camel
-
-from .prediction import Prediction, convert_prediction
-from .rating_value import rating_value_to_number
+from typing import Literal
 
 # Values offered by the search form on ratings.cbr.ru.
 
@@ -144,60 +137,3 @@ RatingStatus = Literal[
     "W – «под наблюдением» или «на пересмотре»",
     "U - обычный",
 ]
-
-
-class _CamelModel(BaseModel):
-    model_config = ConfigDict(
-        alias_generator=to_camel, validate_by_alias=True, validate_by_name=True
-    )
-
-
-def _parse_release_date(value: object) -> object:
-    if isinstance(value, str):
-        return datetime.strptime(value, "%d.%m.%Y").date()
-    return value
-
-
-class RatingItem(_CamelModel):
-    rating_action: str
-    country: str
-    ko_number: str
-    # "DD.MM.YYYY" in the API.
-    release_date: Annotated[date, BeforeValidator(_parse_release_date)]
-    inn: str
-    object_type: str
-    rating_value: str
-    prediction: str
-    object_name: str
-    kra_name: str
-    release_url: str
-    object_id: str
-    isin: str
-    subject_name: str
-
-
-class RatingSearchPage(_CamelModel):
-    page_count: int
-    page_number: int
-    sorting_field: str
-    sorting_direction: str
-    page_size: int
-    item_list: list[RatingItem]
-    item_count: int
-
-
-class LatestRating(BaseModel):
-    """A rating item reduced to what the weekly exports keep."""
-
-    # None when the value is not on RATING_SCALE.
-    value: int | None
-    prediction: Prediction | None
-    release_date: date
-
-    @classmethod
-    def from_item(cls, item: RatingItem) -> Self:
-        return cls(
-            value=rating_value_to_number(item.rating_value),
-            prediction=convert_prediction(item.prediction),
-            release_date=item.release_date,
-        )

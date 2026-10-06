@@ -1,6 +1,6 @@
 import pytest
 
-from cbr_ratings import RATING_SCALE, rating_value_to_number
+from cbr_ratings._core.rating_value import RATING_SCALE, rating_value_to_number
 
 
 @pytest.mark.parametrize(("number", "value"), list(enumerate(RATING_SCALE)))

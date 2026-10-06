@@ -13,7 +13,7 @@ async def main() -> None:
     async with AsyncClient(os.environ["T_INVEST_READONLY_TOKEN"]) as t_invest:
         bonds = (await t_invest.instruments.bonds()).instruments
 
-    date_from = months_ago(date.today(), WINDOW_MONTHS)
+    date_from = months_ago(date.today(), WINDOW_MONTHS)  # noqa: DTZ011
 
     async def search(isin: str) -> list[RatingItem]:
         return await search_ratings(

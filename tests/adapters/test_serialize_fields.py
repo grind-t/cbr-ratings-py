@@ -1,4 +1,4 @@
-from cbr_ratings import serialize_fields
+from cbr_ratings._adapters.cbr_http import serialize_fields
 
 
 def test_serializes_simple_fields():

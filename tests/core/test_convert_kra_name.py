@@ -1,6 +1,6 @@
 import pytest
 
-from cbr_ratings import convert_kra_name
+from cbr_ratings._core.kra import convert_kra_name
 
 
 @pytest.mark.parametrize(

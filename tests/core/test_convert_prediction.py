@@ -1,6 +1,6 @@
 import pytest
 
-from cbr_ratings import convert_prediction
+from cbr_ratings._core.prediction import convert_prediction
 
 
 @pytest.mark.parametrize(

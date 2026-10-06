@@ -1,19 +1,10 @@
 from datetime import date
 
-import httpx
 import pytest
 
-from cbr_ratings import fetch_csrf_token, search_ratings
+from cbr_ratings import search_ratings
 
 pytestmark = pytest.mark.e2e
-
-
-async def test_fetches_csrf_token():
-    async with httpx.AsyncClient() as client:
-        token = await fetch_csrf_token(client)
-
-    assert token is not None
-    assert len(token) == 32
 
 
 async def test_searches_bond_ratings():

@@ -3,6 +3,7 @@ name = "grind-t-cbr-ratings"
 version = "0.1.0"
 description = "Async Python client for the Bank of Russia credit ratings registry"
 readme = "README.md"
+license = "ISC"
 authors = [
     { name = "grind-t", email = "grindt.gd@gmail.com" }
 ]
@@ -11,6 +12,10 @@ dependencies = [
     "httpx>=0.28.1",
     "pydantic>=2.13.5",
 ]
+
+[project.urls]
+Homepage = "https://github.com/grind-t/cbr-ratings-py"
+Issues = "https://github.com/grind-t/cbr-ratings-py/issues"
 
 [build-system]
 requires = ["uv_build>=0.12.9,<0.13.0"]
@@ -28,17 +33,47 @@ explicit = true
 [tool.uv.sources]
 t-tech-investments = { index = "tbank" }
 
+[tool.ruff.lint]
+select = [
+    "E", "F", "I", "UP", "B", "SIM", "RUF", "PT", "N",
+    "C4", "PIE", "PERF", "FURB", "PTH", "T20", "ANN", "ASYNC", "DTZ",
+]
+ignore = ["RUF001"]  # allow Cyrillic in strings
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ANN"]
+# Literal values copied verbatim from the ratings.cbr.ru search form.
+"src/cbr_ratings/_core/search_form.py" = ["E501"]
+
 [tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--import-mode=importlib", "--strict-markers", "--strict-config", "-ra"]
+xfail_strict = true
+filterwarnings = ["error"]
 asyncio_mode = "auto"
 markers = ["e2e: hits the live ratings.cbr.ru API"]
 
-[tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]
+[tool.poe.tasks]
+fmt = "ruff format"
+lint = [
+    { cmd = "ruff check" },
+    { cmd = "lint-imports" },
+    { cmd = "lint-rules src" },
+]
+typecheck = "ty check"
+test-unit = "pytest tests/core tests/usecases"
+test-integration = "pytest tests --ignore=tests/core --ignore=tests/usecases"
+test = "pytest"
+build = "uv build"
+check = ["lint", "typecheck", "test-unit"]
 
 [dependency-groups]
 dev = [
     "brotli>=1.2.0",
+    "grind-t-lint-rules>=0.1.0",
     "grind-t-moex>=0.1.0",
+    "import-linter>=2.15",
+    "poethepoet>=0.48.0",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
     "ruff>=0.16.10",
@@ -46,6 +81,23 @@ dev = [
     "ty>=0.0.84",
 ]
 
-[tool.ruff.lint.per-file-ignores]
-# Literal values copied verbatim from the ratings.cbr.ru search form.
-"src/cbr_ratings/schema.py" = ["E501"]
+# ---------- Architecture rules enforced by lint-imports ----------
+[tool.importlinter]
+root_package = "cbr_ratings"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Layers: dependencies point inward only"
+type = "layers"
+layers = [
+    "cbr_ratings._wiring",
+    "cbr_ratings._adapters | cbr_ratings._usecases",
+    "cbr_ratings._ports",
+    "cbr_ratings._core",
+]
+
+[[tool.importlinter.contracts]]
+name = "Core, ports and use cases do no I/O"
+type = "forbidden"
+source_modules = ["cbr_ratings._core", "cbr_ratings._ports", "cbr_ratings._usecases"]
+forbidden_modules = ["os", "io", "pathlib", "socket", "subprocess", "httpx"]

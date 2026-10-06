@@ -27,7 +27,7 @@ async def main() -> None:
         else:
             logger.warning("Missing issuer inn for bond with isin %s", bond.isin)
 
-    date_from = months_ago(date.today(), WINDOW_MONTHS)
+    date_from = months_ago(date.today(), WINDOW_MONTHS)  # noqa: DTZ011
 
     async def search(inn: str) -> list[RatingItem]:
         return await search_ratings(

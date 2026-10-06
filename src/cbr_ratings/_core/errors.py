@@ -1,0 +1,2 @@
+class CbrRatingsError(Exception):
+    pass
