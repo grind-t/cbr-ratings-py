@@ -2,7 +2,7 @@ from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
 
 
-class CamelModel(BaseModel):
+class CbrApiModel(BaseModel):
     """Validates the camelCase fields of the ratings.cbr.ru API."""
 
     model_config = ConfigDict(

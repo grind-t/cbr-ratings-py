@@ -1,8 +1,8 @@
-from cbr_ratings._core.camel_model import CamelModel
+from cbr_ratings._core.cbr_api_model import CbrApiModel
 from cbr_ratings._core.rating_item import RatingItem
 
 
-class RatingSearchPage(CamelModel):
+class RatingSearchPage(CbrApiModel):
     page_count: int
     page_number: int
     sorting_field: str

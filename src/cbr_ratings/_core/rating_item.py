@@ -3,7 +3,7 @@ from typing import Annotated
 
 from pydantic import BeforeValidator
 
-from cbr_ratings._core.camel_model import CamelModel
+from cbr_ratings._core.cbr_api_model import CbrApiModel
 
 
 def _parse_release_date(value: object) -> object:
@@ -12,7 +12,7 @@ def _parse_release_date(value: object) -> object:
     return value
 
 
-class RatingItem(CamelModel):
+class RatingItem(CbrApiModel):
     rating_action: str
     country: str
     ko_number: str
