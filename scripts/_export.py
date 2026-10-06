@@ -10,7 +10,13 @@ from pathlib import Path
 import brotli
 import httpx
 
-from cbr_ratings import Kra, LatestRating, RatingItem, latest_ratings_by_kra
+from cbr_ratings import (
+    Kra,
+    LatestRating,
+    RatingItem,
+    convert_kra_name,
+    latest_ratings_by_kra,
+)
 
 EXPORTS_DIR = Path(__file__).parent.parent / "exports"
 # Ratings older than this are considered stale.
@@ -42,6 +48,10 @@ async def collect_latest_ratings(
         if not items:
             logger.info("Missing ratings for %s", key)
             continue
+
+        for name in {item.kra_name for item in items}:
+            if convert_kra_name(name) == "UNKNOWN":
+                logger.warning("Unknown KRA %r for %s", name, key)
 
         ratings: dict[Kra, LatestRating] = {
             kra: LatestRating.from_item(item)
