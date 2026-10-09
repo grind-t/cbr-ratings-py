@@ -36,12 +36,19 @@ t-tech-investments = { index = "tbank" }
 [tool.ruff.lint]
 select = [
     "E", "F", "I", "UP", "B", "SIM", "RUF", "PT", "N",
-    "C4", "PIE", "PERF", "FURB", "PTH", "T20", "ANN", "ASYNC", "DTZ",
+    "C4", "PIE", "PERF", "FURB", "PTH", "T20", "ANN", "ASYNC", "DTZ", "TID",
 ]
 ignore = ["RUF001"]  # allow Cyrillic in strings
 
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"pytest.mark.parametrize".msg = "Use the `subtests` fixture with named cases instead."
+
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["ANN"]
+"benchmarks/**" = ["ANN", "TID251"]  # benchmarks need parametrize: subtests are not timed separately
 # Literal values copied verbatim from the ratings.cbr.ru search form.
 "src/cbr_ratings/_core/search_form.py" = ["E501"]
 
@@ -70,7 +77,7 @@ check = ["lint", "typecheck", "test-unit"]
 [dependency-groups]
 dev = [
     "brotli>=1.2.0",
-    "grind-t-lint-rules>=0.1.0",
+    "grind-t-lint-rules>=0.2.0",
     "grind-t-moex>=0.1.0",
     "import-linter>=2.15",
     "poethepoet>=0.48.0",

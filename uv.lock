@@ -284,7 +284,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "brotli", specifier = ">=1.2.0" },
-    { name = "grind-t-lint-rules", specifier = ">=0.1.0" },
+    { name = "grind-t-lint-rules", specifier = ">=0.2.0" },
     { name = "grind-t-moex", specifier = ">=0.1.0" },
     { name = "import-linter", specifier = ">=2.15" },
     { name = "poethepoet", specifier = ">=0.48.0" },
@@ -297,11 +297,11 @@ dev = [
 
 [[package]]
 name = "grind-t-lint-rules"
-version = "0.1.0"
+version = "0.2.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ed/00/d4ef27c5e459eb69caa3b09262494908ca167421c07dfcf014c758646dd4/grind_t_lint_rules-0.1.0.tar.gz", hash = "sha256:dd00ef7277a3abe696a300a378b87553d1860ecd0e8322c40f99b33c28e0ab4a", size = 4405, upload-time = "2026-10-06T18:43:22.27Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9e/ac/7cbdc80cb416306f6ea9cef9b61ed514140b13f69947de7cf0728083cafc/grind_t_lint_rules-0.2.0.tar.gz", hash = "sha256:efcd3b1e05234347dd519d76cbc7c73daccdc4074e30759b66799714eaea68d1", size = 11450, upload-time = "2026-10-09T19:42:06.582Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1d/1a/97cccd0151dbc2002030bb447fef0ba65061979fe64bb7bda7f49cedd78b/grind_t_lint_rules-0.1.0-py3-none-any.whl", hash = "sha256:87ae943cd2783fac2df3d9606bf33b97b135292ac44a600824e6d9bf06985ad1", size = 8430, upload-time = "2026-10-06T18:43:20.719Z" },
+    { url = "https://files.pythonhosted.org/packages/7a/b8/37e374b54173a925836177022be866bbca4129f96e1d972fec83550218d7/grind_t_lint_rules-0.2.0-py3-none-any.whl", hash = "sha256:226419a258e11a7ff47297c20ec6649f34ee345866e6e5944df0cd8b16ae5cbf", size = 31708, upload-time = "2026-10-09T19:42:01.237Z" },
 ]
 
 [[package]]

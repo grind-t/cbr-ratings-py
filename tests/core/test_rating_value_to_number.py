@@ -1,16 +1,16 @@
-import pytest
-
 from cbr_ratings._core.rating_value import RATING_SCALE, rating_value_to_number
 
 
-@pytest.mark.parametrize(("number", "value"), list(enumerate(RATING_SCALE)))
-def test_converts_international_ratings(number, value):
-    assert rating_value_to_number(value) == number
+def test_converts_international_ratings(subtests):
+    for number, value in enumerate(RATING_SCALE):
+        with subtests.test(value=value):
+            assert rating_value_to_number(value) == number
 
 
-@pytest.mark.parametrize(("number", "value"), list(enumerate(RATING_SCALE)))
-def test_converts_russian_ratings(number, value):
-    assert rating_value_to_number(f"ru{value}") == number
+def test_converts_russian_ratings(subtests):
+    for number, value in enumerate(RATING_SCALE):
+        with subtests.test(value=value):
+            assert rating_value_to_number(f"ru{value}") == number
 
 
 def test_spot_checks_scale_ends():
@@ -19,6 +19,7 @@ def test_spot_checks_scale_ends():
     assert rating_value_to_number("D") == 0
 
 
-@pytest.mark.parametrize("value", ["Rating withdrawn", "Рейтинг отозван"])
-def test_returns_none_for_withdrawn_ratings(value):
-    assert rating_value_to_number(value) is None
+def test_returns_none_for_withdrawn_ratings(subtests):
+    for value in ["Rating withdrawn", "Рейтинг отозван"]:
+        with subtests.test(value=value):
+            assert rating_value_to_number(value) is None
