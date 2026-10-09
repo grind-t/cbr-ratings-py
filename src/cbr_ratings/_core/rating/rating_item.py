@@ -3,7 +3,7 @@ from typing import Annotated
 
 from pydantic import BeforeValidator
 
-from cbr_ratings._core.cbr_api_model import CbrApiModel
+from cbr_ratings._core.shared.cbr_api_model import CbrApiModel
 
 
 def _parse_release_date(value: object) -> object:

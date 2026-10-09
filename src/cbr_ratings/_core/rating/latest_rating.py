@@ -4,11 +4,11 @@ from typing import Self
 
 from pydantic import BaseModel
 
-from cbr_ratings._core.kra import Kra, convert_kra_name
-from cbr_ratings._core.prediction import Prediction, convert_prediction
-from cbr_ratings._core.rating_item import RatingItem
-from cbr_ratings._core.rating_value import rating_value_to_number
-from cbr_ratings._core.withdrawn import is_rating_withdrawn
+from cbr_ratings._core.rating.kra import Kra, convert_kra_name
+from cbr_ratings._core.rating.prediction import Prediction, convert_prediction
+from cbr_ratings._core.rating.rating_item import RatingItem
+from cbr_ratings._core.rating.rating_value import rating_value_to_number
+from cbr_ratings._core.rating.withdrawn import is_rating_withdrawn
 
 
 class LatestRating(BaseModel):

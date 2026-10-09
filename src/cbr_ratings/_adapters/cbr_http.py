@@ -6,9 +6,9 @@ from urllib.parse import quote
 
 import httpx
 
-from cbr_ratings._core.errors import CbrRatingsError
-from cbr_ratings._core.query import RatingQuery
-from cbr_ratings._core.rating_search_page import RatingSearchPage
+from cbr_ratings._core.search.errors import CbrRatingsError
+from cbr_ratings._core.search.query import RatingQuery
+from cbr_ratings._core.search.rating_search_page import RatingSearchPage
 
 _DISCLAIMER_URL = "https://ratings.cbr.ru/?disclaimer=1"
 _AJAX_URL = "https://ratings.cbr.ru/bitrix/services/main/ajax.php"

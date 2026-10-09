@@ -1,4 +1,4 @@
-from cbr_ratings._core.withdrawn import is_rating_withdrawn
+from cbr_ratings._core.rating.withdrawn import is_rating_withdrawn
 
 
 def test_true_for_withdrawn_rating_value():

@@ -1,7 +1,7 @@
 from typing import Protocol
 
-from cbr_ratings._core.query import RatingQuery
-from cbr_ratings._core.rating_search_page import RatingSearchPage
+from cbr_ratings._core.search.query import RatingQuery
+from cbr_ratings._core.search.rating_search_page import RatingSearchPage
 
 
 class RatingsSource(Protocol):

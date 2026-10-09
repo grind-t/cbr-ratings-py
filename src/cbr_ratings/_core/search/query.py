@@ -2,7 +2,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date
 
-from cbr_ratings._core.search_form import (
+from cbr_ratings._core.search.search_form import (
     Country,
     KraName,
     RatingAction,

@@ -1,6 +1,6 @@
 import pytest
 
-from cbr_ratings._core.rating_item import RatingItem
+from cbr_ratings._core.rating.rating_item import RatingItem
 
 
 @pytest.fixture

@@ -1,4 +1,4 @@
-from cbr_ratings._core.kra import convert_kra_name
+from cbr_ratings._core.rating.kra import convert_kra_name
 
 
 def test_converts_kra_name(subtests):

@@ -1,4 +1,4 @@
-from cbr_ratings._core.prediction import convert_prediction
+from cbr_ratings._core.rating.prediction import convert_prediction
 
 
 def test_converts_known_prediction_codes(subtests):

@@ -4,9 +4,9 @@ from datetime import date
 import httpx
 
 from cbr_ratings._adapters.cbr_http import CbrHttpSource
-from cbr_ratings._core.query import RatingQuery
-from cbr_ratings._core.rating_item import RatingItem
-from cbr_ratings._core.search_form import (
+from cbr_ratings._core.rating.rating_item import RatingItem
+from cbr_ratings._core.search.query import RatingQuery
+from cbr_ratings._core.search.search_form import (
     Country,
     KraName,
     RatingAction,

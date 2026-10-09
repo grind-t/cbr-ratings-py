@@ -1,5 +1,5 @@
-from cbr_ratings._core.cbr_api_model import CbrApiModel
-from cbr_ratings._core.rating_item import RatingItem
+from cbr_ratings._core.rating.rating_item import RatingItem
+from cbr_ratings._core.shared.cbr_api_model import CbrApiModel
 
 
 class RatingSearchPage(CbrApiModel):

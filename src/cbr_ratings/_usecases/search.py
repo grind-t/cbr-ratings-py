@@ -1,8 +1,8 @@
 import math
 
-from cbr_ratings._core.errors import CbrRatingsError
-from cbr_ratings._core.query import RatingQuery
-from cbr_ratings._core.rating_item import RatingItem
+from cbr_ratings._core.rating.rating_item import RatingItem
+from cbr_ratings._core.search.errors import CbrRatingsError
+from cbr_ratings._core.search.query import RatingQuery
 from cbr_ratings._ports.ratings_source import RatingsSource
 
 # The largest page size the site accepts.

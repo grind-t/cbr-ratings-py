@@ -1,4 +1,4 @@
-from cbr_ratings._core.rating_value import RATING_SCALE, rating_value_to_number
+from cbr_ratings._core.rating.rating_value import RATING_SCALE, rating_value_to_number
 
 
 def test_converts_international_ratings(subtests):

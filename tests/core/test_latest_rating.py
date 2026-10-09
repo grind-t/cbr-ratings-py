@@ -1,11 +1,11 @@
 from datetime import date
 
-from cbr_ratings._core.latest_rating import (
+from cbr_ratings._core.rating.latest_rating import (
     LatestRating,
     latest_rating,
     latest_ratings_by_kra,
 )
-from cbr_ratings._core.rating_item import RatingItem
+from cbr_ratings._core.rating.rating_item import RatingItem
 
 
 def test_returns_the_newest_non_withdrawn_rating(make_item):
