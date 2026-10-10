@@ -1,7 +1,7 @@
 from cbr_ratings._core.rating.action.rating_action import RatingAction
 from cbr_ratings._core.rating.action.withdrawn import is_rating_withdrawn
 from cbr_ratings._core.rating.country import Country, convert_country
-from cbr_ratings._core.rating.kra import Kra, convert_kra
+from cbr_ratings._core.rating.kra import KraCode, convert_kra_name
 from cbr_ratings._core.rating.latest_rating import (
     LatestRating,
     latest_rating,
@@ -13,10 +13,10 @@ from cbr_ratings._core.rating.prediction import (
     convert_prediction,
 )
 from cbr_ratings._core.rating.rating_item import RatingItem
-from cbr_ratings._core.rating.rating_value import (
+from cbr_ratings._core.rating.rating_code import (
     RATING_SCALE,
-    RatingValue,
-    rating_value_to_number,
+    RatingCode,
+    rating_code_to_number,
 )
 from cbr_ratings._core.search.errors import CbrRatingsError
 from cbr_ratings._core.search.search_form import (
@@ -34,13 +34,13 @@ __all__ = [
     "RATING_SCALE",
     "CbrRatingsError",
     "Country",
-    "Kra",
+    "KraCode",
     "LatestRating",
     "ObjectType",
     "Prediction",
     "RatingAction",
     "RatingItem",
-    "RatingValue",
+    "RatingCode",
     "SearchFormCountry",
     "SearchFormKraName",
     "SearchFormRatingAction",
@@ -49,11 +49,11 @@ __all__ = [
     "SearchFormRatingStatus",
     "SearchFormTypeGroup",
     "convert_country",
-    "convert_kra",
+    "convert_kra_name",
     "convert_prediction",
     "is_rating_withdrawn",
     "latest_rating",
     "latest_ratings_by_kra",
-    "rating_value_to_number",
+    "rating_code_to_number",
     "search_ratings",
 ]

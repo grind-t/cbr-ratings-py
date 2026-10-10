@@ -1,7 +1,7 @@
 from cbr_ratings._core.rating.action.withdrawn import is_rating_withdrawn
 
 
-def test_true_for_withdrawn_rating_value():
+def test_true_for_withdrawn_rating_code():
     assert is_rating_withdrawn("Рейтинг отозван", ("WD", "WDP"))
 
 

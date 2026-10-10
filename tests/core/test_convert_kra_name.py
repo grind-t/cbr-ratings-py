@@ -1,4 +1,4 @@
-from cbr_ratings._core.rating.kra import convert_kra
+from cbr_ratings._core.rating.kra import convert_kra_name
 
 
 def test_converts_kra_name(subtests):
@@ -10,4 +10,4 @@ def test_converts_kra_name(subtests):
     }
     for value, expected in cases.items():
         with subtests.test(value=value):
-            assert convert_kra(value) == expected
+            assert convert_kra_name(value) == expected

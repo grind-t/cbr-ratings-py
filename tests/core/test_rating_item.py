@@ -22,7 +22,7 @@ def test_predictions_without_a_direction_become_none(make_item):
     assert make_item(prediction="NA – не предусмотрен методологией").prediction is None
 
 
-def test_normalizes_rating_value_to_the_scale_form(make_item, subtests):
+def test_normalizes_rating_code_to_the_scale_form(make_item, subtests):
     for raw, expected in {
         "ruAA-": "AA-",
         "AA(RU)": "AA",
@@ -30,7 +30,7 @@ def test_normalizes_rating_value_to_the_scale_form(make_item, subtests):
         "Рейтинг отозван": None,
     }.items():
         with subtests.test(raw):
-            assert make_item(rating_value=raw).rating_value == expected
+            assert make_item(rating_code=raw).rating_code == expected
 
 
 def test_empty_optional_fields_become_none(make_item):
@@ -59,7 +59,7 @@ def test_adds_missing_scheme_to_release_url(make_item):
 def test_rejects_values_outside_the_known_formats(make_item, subtests):
     invalid = {
         "country": {"country": "АТЛАНТИДА"},
-        "kra": {"kra": "АКРА"},
+        "kra code": {"kra_code": "АКРА"},
         "action": {"rating_action": "XX - неизвестное действие"},
         "object type": {"object_type": "ZZZZ - неизвестный тип"},
         "prediction": {"prediction": "ZZ - неизвестный"},
@@ -67,8 +67,8 @@ def test_rejects_values_outside_the_known_formats(make_item, subtests):
         "isin": {"isin": "not-an-isin"},
         "ko number": {"ko_number": "12"},
         "object id": {"object_id": "abc"},
-        "empty rating value": {"rating_value": ""},
-        "unknown rating value": {"rating_value": "NR"},
+        "empty rating value": {"rating_code": ""},
+        "unknown rating value": {"rating_code": "NR"},
     }
 
     for name, overrides in invalid.items():

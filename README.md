@@ -30,7 +30,7 @@ async def main():
     for kra, item in cbr_ratings.latest_ratings_by_kra(items).items():
         print(
             kra,
-            item.rating_value,
+            item.rating_code,
             item.prediction,
         )
 
@@ -50,8 +50,8 @@ last search in the session cookie, so concurrent searches must not share one.
 | `latest_rating(items)` | Newest non-withdrawn rating |
 | `latest_ratings_by_kra(items)` | Newest non-withdrawn rating per agency |
 | `convert_country(name)` | `"РОССИЯ"` → `"RU"`; international organizations → `"INTL"` |
-| `convert_kra(name)` | `"АКРА (АО)"` → `"AKRA"` |
-| `rating_value_to_number(value)` | `"ruAA-"` → `20`, index in `RATING_SCALE` |
+| `convert_kra_name(name)` | `"АКРА (АО)"` → `"AKRA"` |
+| `rating_code_to_number(value)` | `"ruAA-"` → `20`, index in `RATING_SCALE` |
 | `convert_prediction(value)` | `"STA - стабильный"` → `"STA"` |
 | `is_rating_withdrawn(value, action)` | Withdrawn by value or `WD` action |
 | `LatestRating.from_item(item)` | Rating value, prediction and date only |

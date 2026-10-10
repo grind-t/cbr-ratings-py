@@ -11,7 +11,7 @@ import brotli
 import httpx
 
 from cbr_ratings import (
-    Kra,
+    KraCode,
     LatestRating,
     RatingItem,
     latest_ratings_by_kra,
@@ -36,9 +36,9 @@ def months_ago(today: date, months: int) -> date:
 
 async def collect_latest_ratings(
     keys: list[str], search: Callable[[str], Awaitable[list[RatingItem]]]
-) -> dict[str, dict[Kra, LatestRating]]:
+) -> dict[str, dict[KraCode, LatestRating]]:
     """Map each key (isin or inn) to the latest rating of every known agency."""
-    result: dict[str, dict[Kra, LatestRating]] = {}
+    result: dict[str, dict[KraCode, LatestRating]] = {}
 
     for key in keys:
         await asyncio.sleep(REQUEST_DELAY)
@@ -48,7 +48,7 @@ async def collect_latest_ratings(
             logger.info("Missing ratings for %s", key)
             continue
 
-        ratings: dict[Kra, LatestRating] = {
+        ratings: dict[KraCode, LatestRating] = {
             kra: LatestRating.from_item(item)
             for kra, item in latest_ratings_by_kra(items).items()
         }
@@ -59,7 +59,7 @@ async def collect_latest_ratings(
     return result
 
 
-def write_export(name: str, ratings: dict[str, dict[Kra, LatestRating]]) -> None:
+def write_export(name: str, ratings: dict[str, dict[KraCode, LatestRating]]) -> None:
     data = {
         key: {kra: rating.model_dump(mode="json") for kra, rating in by_kra.items()}
         for key, by_kra in sorted(ratings.items())
