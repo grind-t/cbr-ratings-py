@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from datetime import date
 from typing import Literal
 
+from cbr_ratings._core.search.bitrix_protocol import FieldValue, serialize_fields
+
 # Values offered by the search form on ratings.cbr.ru.
 
 CountryFilter = Literal[
@@ -231,3 +233,30 @@ class RatingQuery:
     rating_group: Sequence[RatingGroupFilter] | None = None
     rating_action: Sequence[RatingActionFilter] | None = None
     rating_status: Sequence[RatingStatusFilter] | None = None
+
+    def to_fields(self) -> dict[str, FieldValue]:
+        """Fields of the search form, keyed by the names the site expects."""
+        return {
+            "formSearh": "advanced",
+            "dateFrom": _format_date(self.date_from),
+            "dateTo": _format_date(self.date_to),
+            "ratingName": self.rating_name,
+            "inn": self.inn,
+            "isin": self.isin,
+            "koNumber": self.ko_number,
+            "country": self.country,
+            "typeGroup": self.type_group,
+            "kraName": self.kra_name,
+            "ratingScale": self.rating_scale,
+            "ratingGroup": self.rating_group,
+            "ratingAction": self.rating_action,
+            "ratingStatus": self.rating_status,
+        }
+
+    def to_string(self) -> str:
+        """Form body for the site's search request."""
+        return serialize_fields(self.to_fields())
+
+
+def _format_date(value: date | None) -> str | None:
+    return value.strftime("%d.%m.%Y") if value else None

@@ -1,4 +1,4 @@
-from cbr_ratings._shell.search.cbr_http import serialize_fields
+from cbr_ratings._core.search.bitrix_protocol import parse_csrf_token, serialize_fields
 
 
 def test_serializes_simple_fields():
@@ -34,3 +34,13 @@ def test_encodes_cyrillic():
 
 def test_serializes_with_custom_prefix():
     assert serialize_fields({"foo": "bar"}, "custom") == "custom[foo]=bar"
+
+
+def test_parses_csrf_token():
+    html = '<script>{"bitrix_sessid": "abc123"}</script>'
+
+    assert parse_csrf_token(html) == "abc123"
+
+
+def test_csrf_token_is_none_when_absent():
+    assert parse_csrf_token("<html></html>") is None
