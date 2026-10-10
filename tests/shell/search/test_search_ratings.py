@@ -1,3 +1,4 @@
+from collections import Counter
 from datetime import date
 
 import pytest
@@ -17,8 +18,13 @@ async def test_searches_bond_ratings():
 
 
 async def test_returns_every_page():
-    # Sberbank has well over one page of ratings
-    items = await search_ratings(inn="7707083893", date_from=date(2015, 1, 1))
+    # A whole month is too big for one page, its halves are not.
+    whole = await search_ratings(date_from=date(2024, 1, 1), date_to=date(2024, 1, 31))
+    first_half = await search_ratings(
+        date_from=date(2024, 1, 1), date_to=date(2024, 1, 15)
+    )
+    second_half = await search_ratings(
+        date_from=date(2024, 1, 16), date_to=date(2024, 1, 31)
+    )
 
-    assert len(items) > 25
-    assert len({item.object_id + item.release_url for item in items}) > 25
+    assert Counter(map(repr, whole)) == Counter(map(repr, [*first_half, *second_half]))

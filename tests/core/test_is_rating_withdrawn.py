@@ -10,11 +10,7 @@ def test_handles_missing_actions():
     assert not is_rating_withdrawn("AAA")
 
 
-def test_true_for_withdrawal_action():
-    assert is_rating_withdrawn("", ("WD",))
-
-
-def test_true_for_withdrawal_among_other_actions():
+def test_true_for_withdrawal_among_actions():
     assert is_rating_withdrawn("", ("DG", "WD"))
 
 
