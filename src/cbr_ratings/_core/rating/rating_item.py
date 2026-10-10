@@ -2,7 +2,10 @@ from typing import Annotated
 
 from pydantic import BeforeValidator, Field, StringConstraints
 
-from cbr_ratings._core.rating.action.rating_action import RatingActions
+from cbr_ratings._core.rating.action.rating_action import (
+    RatingAction,
+    convert_rating_action,
+)
 from cbr_ratings._core.rating.api_values import empty_to_none
 from cbr_ratings._core.rating.country import CountryCode, country_name_to_code
 from cbr_ratings._core.rating.kra import KraCode, kra_name_to_code
@@ -20,7 +23,9 @@ _Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 
 
 class RatingItem(CbrApiModel):
-    rating_action: RatingActions
+    rating_action: Annotated[
+        tuple[RatingAction, ...], BeforeValidator(convert_rating_action)
+    ]
     country_code: Annotated[
         CountryCode, BeforeValidator(country_name_to_code), Field(alias="country")
     ]

@@ -3,7 +3,7 @@ from typing import get_args
 import pytest
 
 from cbr_ratings._core.rating.country import country_name_to_code
-from cbr_ratings._core.search.search_form import Country
+from cbr_ratings._core.search.search_form import SearchFormCountry
 
 
 def test_converts_country_names_to_iso_codes(subtests):
@@ -29,7 +29,7 @@ def test_international_values_share_one_code(subtests):
 
 
 def test_converts_every_country_of_the_search_form(subtests):
-    for name in get_args(Country):
+    for name in get_args(SearchFormCountry):
         with subtests.test(name=name):
             assert country_name_to_code(name)
 

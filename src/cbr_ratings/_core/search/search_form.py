@@ -2,7 +2,7 @@ from typing import Literal
 
 # Values offered by the search form on ratings.cbr.ru.
 
-Country = Literal[
+SearchFormCountry = Literal[
     "международная компания, зарегистрированная в порядке инкорпорации",
     "ГОНКОНГ",
     "СЛОВАКИЯ",
@@ -37,7 +37,7 @@ Country = Literal[
     "ТАДЖИКИСТАН",
 ]
 
-TypeGroup = Literal[
+SearchFormTypeGroup = Literal[
     "Финансовые инструменты",
     "Негосударственные пенсионные фонды",
     "Страховые организации",
@@ -48,14 +48,14 @@ TypeGroup = Literal[
     "Объекты суверенного кредитного рейтинга",
 ]
 
-KraName = Literal[
+SearchFormKraName = Literal[
     'ООО "НРА"',
     'АО "Эксперт РА"',
     'ООО "НКР"',
     "АКРА (АО)",
 ]
 
-RatingScale = Literal[
+SearchFormRatingScale = Literal[
     "международная рейтинговая шкала в иностранной валюте",
     "международная рейтинговая шкала в национальной валюте",
     "национальная российская рейтинговая шкала для инструментов структурированного финансирования",
@@ -68,7 +68,7 @@ RatingScale = Literal[
     "национальная рейтинговая шкала Республики Беларусь",
 ]
 
-RatingGroup = Literal[
+SearchFormRatingGroup = Literal[
     "AAA",
     "AA+",
     "AA",
@@ -91,7 +91,7 @@ RatingGroup = Literal[
     "D",
 ]
 
-RatingAction = Literal[
+SearchFormRatingAction = Literal[
     "DG - понижение кредитного рейтинга, WR - изменение статуса «под наблюдением»/«на пересмотре»",
     "DG - Понижение кредитного рейтинга",
     "AF – подтверждение кредитного рейтинга, RWR – снятие статуса «под наблюдением»",
@@ -202,7 +202,7 @@ RatingAction = Literal[
     "WD - отзыв кредитного рейтинга, WR - изменение статуса «под наблюдением» или «на пересмотре»",
 ]
 
-RatingStatus = Literal[
+SearchFormRatingStatus = Literal[
     "W – «под наблюдением»/«на пересмотре»",
     "U – обычный",
     "W – «под наблюдением»",
