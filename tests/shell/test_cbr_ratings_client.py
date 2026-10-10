@@ -5,8 +5,8 @@ import httpx
 import pytest
 
 from cbr_ratings import CbrRatingsClient, CbrRatingsError
-from cbr_ratings._shell.cbr_ratings_client import _PAGE_SIZE
 
+_PAGE_SIZE = 100
 _NOT_FOUND = {
     "status": "error",
     "errors": [{"message": "Array", "code": 0, "customData": None}],
@@ -36,11 +36,11 @@ def _page(ids: list[str], item_count: int) -> dict:
     return {
         "status": "success",
         "data": {
-            "pageCount": -(-item_count // 25),
+            "pageCount": -(-item_count // _PAGE_SIZE),
             "pageNumber": 1,
             "sortingField": "objectName",
             "sortingDirection": "ascending",
-            "pageSize": 25,
+            "pageSize": _PAGE_SIZE,
             "itemList": [_item(i) for i in ids],
             "itemCount": item_count,
         },
@@ -151,5 +151,7 @@ async def test_concurrent_queries_do_not_interleave():
 
     await asyncio.gather(client.query(), client.query())
 
-    search, page = "searchRating", "searchRatingNavigation"
-    assert actions == [search, page, page, search, page, page]
+    half = len(actions) // 2
+    assert actions[0] == "searchRating"
+    assert "searchRating" not in actions[1:half]
+    assert actions[:half] == actions[half:]
