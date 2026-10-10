@@ -1,23 +1,19 @@
-import re
-from typing import Annotated, Literal, get_args
-
-from pydantic import BeforeValidator
+from typing import Literal, get_args
 
 from cbr_ratings._core.rating.api_values import leading_code
 
 Prediction = Literal["STA", "POS", "NEG", "DEV"]
 
-_PREDICTION_RE = re.compile(r"^([A-Z]+)")
+# NA: the methodology has no prediction, OP: other, UNW: undetermined.
+_NO_PREDICTION_CODES = ("NA", "OP", "UNW")
 
 
 def convert_prediction(value: str | None) -> Prediction | None:
-    match = _PREDICTION_RE.match(value or "")
-    code = match[1] if match else ""
-    return next((p for p in get_args(Prediction) if p == code), None)
-
-
-# NA: the methodology has no prediction, OP: other, UNW: undetermined.
-PredictionCode = Literal["NA", "STA", "POS", "NEG", "DEV", "OP", "UNW"]
-
-# The API sends "STA - стабильный", or "" when there is no prediction.
-ItemPrediction = Annotated[PredictionCode | None, BeforeValidator(leading_code)]
+    """'STA - стабильный' -> 'STA'; no usable prediction -> None."""
+    code = leading_code(value)
+    if code is None or code in _NO_PREDICTION_CODES:
+        return None
+    for prediction in get_args(Prediction):
+        if code == prediction:
+            return prediction
+    raise ValueError(f"unknown prediction: {value!r}")

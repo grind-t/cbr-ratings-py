@@ -31,7 +31,7 @@ async def main():
         print(
             kra,
             item.rating_value,
-            cbr_ratings.convert_prediction(item.prediction),
+            item.prediction,
         )
 
 

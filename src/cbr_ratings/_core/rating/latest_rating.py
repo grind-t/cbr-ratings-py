@@ -5,7 +5,7 @@ from typing import Self
 from pydantic import BaseModel
 
 from cbr_ratings._core.rating.kra import KraCode
-from cbr_ratings._core.rating.prediction import Prediction, convert_prediction
+from cbr_ratings._core.rating.prediction import Prediction
 from cbr_ratings._core.rating.rating_item import RatingItem
 from cbr_ratings._core.rating.rating_value import rating_value_to_number
 
@@ -22,7 +22,7 @@ class LatestRating(BaseModel):
     def from_item(cls, item: RatingItem) -> Self:
         return cls(
             value=_scale_number(item.rating_value),
-            prediction=convert_prediction(item.prediction),
+            prediction=item.prediction,
             release_date=item.release_date,
         )
 

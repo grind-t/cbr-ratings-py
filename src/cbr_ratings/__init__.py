@@ -9,7 +9,6 @@ from cbr_ratings._core.rating.latest_rating import (
 from cbr_ratings._core.rating.object.object_type import ObjectTypeCode
 from cbr_ratings._core.rating.prediction import (
     Prediction,
-    PredictionCode,
     convert_prediction,
 )
 from cbr_ratings._core.rating.rating_item import RatingItem
@@ -35,7 +34,6 @@ __all__ = [
     "LatestRating",
     "ObjectTypeCode",
     "Prediction",
-    "PredictionCode",
     "RatingAction",
     "RatingActionCode",
     "RatingGroup",

@@ -14,6 +14,10 @@ def test_keeps_codes_of_code_and_text_fields(make_item):
     assert item.prediction == "NEG"
 
 
+def test_predictions_without_a_direction_become_none(make_item):
+    assert make_item(prediction="NA – не предусмотрен методологией").prediction is None
+
+
 def test_normalizes_rating_value_to_the_scale_form(make_item, subtests):
     for raw, expected in {
         "ruAA-": "AA-",

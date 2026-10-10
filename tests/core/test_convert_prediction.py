@@ -1,3 +1,5 @@
+import pytest
+
 from cbr_ratings._core.rating.prediction import convert_prediction
 
 
@@ -28,3 +30,8 @@ def test_returns_none_for_unsupported_or_empty_values(subtests):
     for value in values:
         with subtests.test(value=value):
             assert convert_prediction(value) is None
+
+
+def test_rejects_unknown_prediction_codes():
+    with pytest.raises(ValueError, match="unknown prediction"):
+        convert_prediction("ZZ - неизвестный")

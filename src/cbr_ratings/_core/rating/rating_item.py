@@ -9,7 +9,7 @@ from cbr_ratings._core.rating.object.inn import Inn
 from cbr_ratings._core.rating.object.ko_number import KoNumber
 from cbr_ratings._core.rating.object.object_type import ObjectType
 from cbr_ratings._core.rating.object.security_id import SecurityId
-from cbr_ratings._core.rating.prediction import ItemPrediction
+from cbr_ratings._core.rating.prediction import Prediction, convert_prediction
 from cbr_ratings._core.rating.rating_value import RatingValue
 from cbr_ratings._core.rating.release.release_date import ReleaseDate
 from cbr_ratings._core.rating.release.release_url import ReleaseUrl
@@ -28,7 +28,7 @@ class RatingItem(CbrApiModel):
     object_type: ObjectType
     # A RATING_SCALE value, or None when the rating is withdrawn.
     rating_value: RatingValue
-    prediction: ItemPrediction
+    prediction: Annotated[Prediction | None, BeforeValidator(convert_prediction)]
     object_name: _Text
     kra_code: Annotated[
         KraCode, BeforeValidator(kra_name_to_code), Field(alias="kraName")
