@@ -51,7 +51,7 @@ def test_adds_missing_scheme_to_release_url(make_item):
 def test_rejects_values_outside_the_known_formats(make_item, subtests):
     invalid = {
         "country": {"country": "АТЛАНТИДА"},
-        "kra": {"kra_name": "АКРА"},
+        "kra": {"kra_code": "АКРА"},
         "action": {"rating_action": "XX - неизвестное действие"},
         "object type": {"object_type": "ZZZZ - неизвестный тип"},
         "prediction": {"prediction": "ZZ - неизвестный"},

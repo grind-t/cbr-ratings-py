@@ -4,7 +4,7 @@ from typing import Self
 
 from pydantic import BaseModel
 
-from cbr_ratings._core.rating.kra import Kra, convert_kra_name
+from cbr_ratings._core.rating.kra import KraCode
 from cbr_ratings._core.rating.prediction import Prediction, convert_prediction
 from cbr_ratings._core.rating.rating_item import RatingItem
 from cbr_ratings._core.rating.rating_value import rating_value_to_number
@@ -44,12 +44,12 @@ def _release_date(item: RatingItem) -> date:
     return item.release_date
 
 
-def latest_ratings_by_kra(items: Iterable[RatingItem]) -> dict[Kra, RatingItem]:
-    groups: dict[Kra, list[RatingItem]] = {}
+def latest_ratings_by_kra(items: Iterable[RatingItem]) -> dict[KraCode, RatingItem]:
+    groups: dict[KraCode, list[RatingItem]] = {}
     for item in items:
-        groups.setdefault(convert_kra_name(item.kra_name), []).append(item)
+        groups.setdefault(item.kra_code, []).append(item)
 
-    result: dict[Kra, RatingItem] = {}
+    result: dict[KraCode, RatingItem] = {}
     for kra, group in groups.items():
         if (latest := latest_rating(group)) is not None:
             result[kra] = latest

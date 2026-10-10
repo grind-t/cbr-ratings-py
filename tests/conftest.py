@@ -16,7 +16,7 @@ def make_item():
             "rating_value": "BBB",
             "prediction": "STA - стабильный",
             "object_name": "Эмитент",
-            "kra_name": "АКРА (АО)",
+            "kra_code": "АКРА (АО)",
             "release_url": "https://example.com",
             "object_id": "1",
             "isin": "",

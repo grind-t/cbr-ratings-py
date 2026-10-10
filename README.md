@@ -49,7 +49,7 @@ last search in the session cookie, so concurrent searches must not share one.
 | `search_ratings(...)` | Search the registry; all filters of the site's advanced form |
 | `latest_rating(items)` | Newest non-withdrawn rating |
 | `latest_ratings_by_kra(items)` | Newest non-withdrawn rating per agency |
-| `convert_kra_name(name)` | `"АКРА (АО)"` → `"AKRA"` |
+| `kra_name_to_code(name)` | `"АКРА (АО)"` → `"AKRA"` |
 | `rating_value_to_number(value)` | `"ruAA-"` → `20`, index in `RATING_SCALE` |
 | `convert_prediction(value)` | `"STA - стабильный"` → `"STA"` |
 | `is_rating_withdrawn(value, action)` | Withdrawn by value or `WD` action |
