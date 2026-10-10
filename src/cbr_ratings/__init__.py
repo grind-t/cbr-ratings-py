@@ -1,18 +1,19 @@
+from cbr_ratings._core.rating.action.rating_action import RatingActionCode
+from cbr_ratings._core.rating.action.withdrawn import is_rating_withdrawn
 from cbr_ratings._core.rating.kra import Kra, convert_kra_name
 from cbr_ratings._core.rating.latest_rating import (
     LatestRating,
     latest_rating,
     latest_ratings_by_kra,
 )
-from cbr_ratings._core.rating.prediction import Prediction, convert_prediction
-from cbr_ratings._core.rating.rating_item import (
-    ObjectTypeCode,
+from cbr_ratings._core.rating.object.object_type import ObjectTypeCode
+from cbr_ratings._core.rating.prediction import (
+    Prediction,
     PredictionCode,
-    RatingActionCode,
-    RatingItem,
+    convert_prediction,
 )
+from cbr_ratings._core.rating.rating_item import RatingItem
 from cbr_ratings._core.rating.rating_value import RATING_SCALE, rating_value_to_number
-from cbr_ratings._core.rating.withdrawn import is_rating_withdrawn
 from cbr_ratings._core.search.errors import CbrRatingsError
 from cbr_ratings._core.search.search_form import (
     Country,
