@@ -49,21 +49,17 @@ def test_by_kra_returns_empty_dict_for_empty_input():
 
 
 def test_by_kra_returns_the_newest_item_per_kra(make_item):
-    older = make_item(
-        kra_code="АКРА (АО)", rating_value="BBB", release_date="01.01.2020"
-    )
-    newer = make_item(
-        kra_code="АКРА (АО)", rating_value="AA", release_date="05.05.2023"
-    )
+    older = make_item(kra="АКРА (АО)", rating_value="BBB", release_date="01.01.2020")
+    newer = make_item(kra="АКРА (АО)", rating_value="AA", release_date="05.05.2023")
 
     assert latest_ratings_by_kra([older, newer]) == {"AKRA": newer}
 
 
 def test_by_kra_groups_items_by_kra(make_item):
-    akra = make_item(kra_code="АКРА (АО)", rating_value="AA")
-    nkr = make_item(kra_code='ООО "НКР"', rating_value="BBB")
-    expert = make_item(kra_code='АО "Эксперт РА"', rating_value="A")
-    nra = make_item(kra_code='ООО "НРА"', rating_value="BB")
+    akra = make_item(kra="АКРА (АО)", rating_value="AA")
+    nkr = make_item(kra='ООО "НКР"', rating_value="BBB")
+    expert = make_item(kra='АО "Эксперт РА"', rating_value="A")
+    nra = make_item(kra='ООО "НРА"', rating_value="BB")
 
     assert latest_ratings_by_kra([akra, nkr, expert, nra]) == {
         "AKRA": akra,
@@ -74,8 +70,8 @@ def test_by_kra_groups_items_by_kra(make_item):
 
 
 def test_by_kra_omits_kra_where_all_are_withdrawn(make_item):
-    withdrawn_akra = make_item(kra_code="АКРА (АО)", rating_value="Рейтинг отозван")
-    valid_nkr = make_item(kra_code='ООО "НКР"', rating_value="A")
+    withdrawn_akra = make_item(kra="АКРА (АО)", rating_value="Рейтинг отозван")
+    valid_nkr = make_item(kra='ООО "НКР"', rating_value="A")
 
     assert latest_ratings_by_kra([withdrawn_akra, valid_nkr]) == {"NKR": valid_nkr}
 
@@ -101,7 +97,7 @@ def test_rating_item_accepts_api_camel_case():
     )
 
     assert item.release_date == date(2023, 10, 31)
-    assert item.kra_code == "AKRA"
+    assert item.kra == "AKRA"
 
 
 def test_latest_rating_from_item(make_item):

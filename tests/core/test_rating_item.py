@@ -14,8 +14,8 @@ def test_keeps_codes_of_code_and_text_fields(make_item):
     assert item.prediction == "NEG"
 
 
-def test_converts_country_name_to_code(make_item):
-    assert make_item(country_code="РОССИЯ").country_code == "RU"
+def test_converts_country_name(make_item):
+    assert make_item(country="РОССИЯ").country == "RU"
 
 
 def test_predictions_without_a_direction_become_none(make_item):
@@ -58,8 +58,8 @@ def test_adds_missing_scheme_to_release_url(make_item):
 
 def test_rejects_values_outside_the_known_formats(make_item, subtests):
     invalid = {
-        "country": {"country_code": "АТЛАНТИДА"},
-        "kra": {"kra_code": "АКРА"},
+        "country": {"country": "АТЛАНТИДА"},
+        "kra": {"kra": "АКРА"},
         "action": {"rating_action": "XX - неизвестное действие"},
         "object type": {"object_type": "ZZZZ - неизвестный тип"},
         "prediction": {"prediction": "ZZ - неизвестный"},

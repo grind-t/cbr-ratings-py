@@ -1,8 +1,8 @@
 from typing import Literal
 
-KraCode = Literal["AKRA", "NKR", "EXPERT_RA", "NRA"]
+Kra = Literal["AKRA", "NKR", "EXPERT_RA", "NRA"]
 
-_KRA_BY_NAME: dict[str, KraCode] = {
+_KRA_BY_NAME: dict[str, Kra] = {
     "АКРА (АО)": "AKRA",
     'ООО "НКР"': "NKR",
     'АО "Эксперт РА"': "EXPERT_RA",
@@ -10,7 +10,7 @@ _KRA_BY_NAME: dict[str, KraCode] = {
 }
 
 
-def kra_name_to_code(value: str) -> KraCode:
+def convert_kra(value: str) -> Kra:
     try:
         return _KRA_BY_NAME[value]
     except KeyError:

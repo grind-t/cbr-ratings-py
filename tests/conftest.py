@@ -8,7 +8,7 @@ def make_item():
     def make(**overrides) -> RatingItem:
         fields = {
             "rating_action": "AF - подтверждение кредитного рейтинга",
-            "country_code": "РОССИЯ",
+            "country": "РОССИЯ",
             "ko_number": "",
             "release_date": "01.01.2000",
             "inn": "",
@@ -16,7 +16,7 @@ def make_item():
             "rating_value": "BBB",
             "prediction": "STA - стабильный",
             "object_name": "Эмитент",
-            "kra_code": "АКРА (АО)",
+            "kra": "АКРА (АО)",
             "release_url": "https://example.com",
             "object_id": "1",
             "isin": "",

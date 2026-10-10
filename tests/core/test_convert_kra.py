@@ -1,7 +1,7 @@
-from cbr_ratings._core.rating.kra import kra_name_to_code
+from cbr_ratings._core.rating.kra import convert_kra
 
 
-def test_converts_kra_name_to_code(subtests):
+def test_converts_kra_name(subtests):
     cases = {
         'АО "Эксперт РА"': "EXPERT_RA",
         "АКРА (АО)": "AKRA",
@@ -10,4 +10,4 @@ def test_converts_kra_name_to_code(subtests):
     }
     for value, expected in cases.items():
         with subtests.test(value=value):
-            assert kra_name_to_code(value) == expected
+            assert convert_kra(value) == expected

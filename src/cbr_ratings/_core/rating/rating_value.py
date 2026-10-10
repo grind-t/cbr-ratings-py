@@ -1,7 +1,4 @@
 import re
-from typing import Annotated
-
-from pydantic import BeforeValidator
 
 from cbr_ratings._core.rating.action.withdrawn import is_rating_withdrawn
 
@@ -55,7 +52,3 @@ def convert_rating_value(value: str) -> str | None:
     if match is None or match[0] not in RATING_SCALE:
         raise ValueError(f"unknown rating value: {value!r}")
     return match[0]
-
-
-# None means the rating is withdrawn.
-RatingValue = Annotated[str | None, BeforeValidator(convert_rating_value)]

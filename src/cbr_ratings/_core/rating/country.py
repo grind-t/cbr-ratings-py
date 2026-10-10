@@ -2,13 +2,13 @@ from typing import Literal
 
 # ISO 3166-1 alpha-2 codes, plus INTL (not ISO) for international organizations
 # and companies, which have no country.
-CountryCode = Literal[
+Country = Literal[
     "AE", "BG", "BY", "CH", "CN", "CY", "CZ", "DE", "GB", "HK", "HU", "IE", "IN",
     "INTL", "JE", "JP", "KG", "KZ", "LU", "LV", "NL", "PL", "RO", "RU", "SG", "SK",
     "TJ", "UZ", "VG",
 ]  # fmt: skip
 
-_COUNTRY_BY_NAME: dict[str, CountryCode] = {
+_COUNTRY_BY_NAME: dict[str, Country] = {
     "ГОНКОНГ": "HK",
     "СЛОВАКИЯ": "SK",
     "КИРГИЗИЯ": "KG",
@@ -44,7 +44,7 @@ _COUNTRY_BY_NAME: dict[str, CountryCode] = {
 }
 
 
-def country_name_to_code(value: str) -> CountryCode:
+def convert_country(value: str) -> Country:
     try:
         return _COUNTRY_BY_NAME[value]
     except KeyError:
