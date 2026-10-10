@@ -1,5 +1,5 @@
 from collections.abc import Iterable
-from datetime import date
+from operator import attrgetter
 
 from cbr_ratings._core.rating.kra import KraCode
 from cbr_ratings._core.rating.rating_item import RatingItem
@@ -11,11 +11,7 @@ def latest_rating(items: Iterable[RatingItem]) -> RatingItem | None:
         for item in items
         if item.rating_code is not None and "WD" not in item.rating_action
     ]
-    return max(active, key=_release_date) if active else None
-
-
-def _release_date(item: RatingItem) -> date:
-    return item.release_date
+    return max(active, key=attrgetter("release_date")) if active else None
 
 
 def latest_ratings_by_kra(items: Iterable[RatingItem]) -> dict[KraCode, RatingItem]:
