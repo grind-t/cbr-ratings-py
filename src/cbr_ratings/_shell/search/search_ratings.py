@@ -6,15 +6,15 @@ import httpx
 
 from cbr_ratings._core.rating.rating_item import RatingItem
 from cbr_ratings._core.search.errors import CbrRatingsError
-from cbr_ratings._core.search.query import RatingQuery
-from cbr_ratings._core.search.search_form import (
-    SearchFormCountry,
-    SearchFormKraName,
-    SearchFormRatingAction,
-    SearchFormRatingGroup,
-    SearchFormRatingScale,
-    SearchFormRatingStatus,
-    SearchFormTypeGroup,
+from cbr_ratings._core.search.query import (
+    CountryFilter,
+    KraNameFilter,
+    RatingActionFilter,
+    RatingGroupFilter,
+    RatingQuery,
+    RatingScaleFilter,
+    RatingStatusFilter,
+    TypeGroupFilter,
 )
 from cbr_ratings._shell.search.cbr_http import CbrHttpSource
 
@@ -30,13 +30,13 @@ async def search_ratings(
     inn: str | None = None,
     isin: str | None = None,
     ko_number: str | None = None,
-    country: Sequence[SearchFormCountry] | None = None,
-    type_group: Sequence[SearchFormTypeGroup] | None = None,
-    kra_name: Sequence[SearchFormKraName] | None = None,
-    rating_scale: Sequence[SearchFormRatingScale] | None = None,
-    rating_group: Sequence[SearchFormRatingGroup] | None = None,
-    rating_action: Sequence[SearchFormRatingAction] | None = None,
-    rating_status: Sequence[SearchFormRatingStatus] | None = None,
+    country: Sequence[CountryFilter] | None = None,
+    type_group: Sequence[TypeGroupFilter] | None = None,
+    kra_name: Sequence[KraNameFilter] | None = None,
+    rating_scale: Sequence[RatingScaleFilter] | None = None,
+    rating_group: Sequence[RatingGroupFilter] | None = None,
+    rating_action: Sequence[RatingActionFilter] | None = None,
+    rating_status: Sequence[RatingStatusFilter] | None = None,
     client: httpx.AsyncClient | None = None,
 ) -> list[RatingItem]:
     """Search the ratings registry and return every page of results.

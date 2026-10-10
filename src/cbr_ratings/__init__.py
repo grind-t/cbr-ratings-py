@@ -11,21 +11,21 @@ from cbr_ratings._core.rating.prediction import (
     Prediction,
     convert_prediction,
 )
-from cbr_ratings._core.rating.rating_item import RatingItem
 from cbr_ratings._core.rating.rating_code import (
     RATING_SCALE,
     RatingCode,
     rating_code_to_number,
 )
+from cbr_ratings._core.rating.rating_item import RatingItem
 from cbr_ratings._core.search.errors import CbrRatingsError
-from cbr_ratings._core.search.search_form import (
-    SearchFormCountry,
-    SearchFormKraName,
-    SearchFormRatingAction,
-    SearchFormRatingGroup,
-    SearchFormRatingScale,
-    SearchFormRatingStatus,
-    SearchFormTypeGroup,
+from cbr_ratings._core.search.query import (
+    CountryFilter,
+    KraNameFilter,
+    RatingActionFilter,
+    RatingGroupFilter,
+    RatingScaleFilter,
+    RatingStatusFilter,
+    TypeGroupFilter,
 )
 from cbr_ratings._shell.search.search_ratings import search_ratings
 
@@ -33,19 +33,19 @@ __all__ = [
     "RATING_SCALE",
     "CbrRatingsError",
     "Country",
+    "CountryFilter",
     "KraCode",
+    "KraNameFilter",
     "ObjectType",
     "Prediction",
     "RatingAction",
-    "RatingItem",
+    "RatingActionFilter",
     "RatingCode",
-    "SearchFormCountry",
-    "SearchFormKraName",
-    "SearchFormRatingAction",
-    "SearchFormRatingGroup",
-    "SearchFormRatingScale",
-    "SearchFormRatingStatus",
-    "SearchFormTypeGroup",
+    "RatingGroupFilter",
+    "RatingItem",
+    "RatingScaleFilter",
+    "RatingStatusFilter",
+    "TypeGroupFilter",
     "convert_country",
     "convert_kra_name",
     "convert_prediction",

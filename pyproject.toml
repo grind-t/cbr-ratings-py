@@ -50,7 +50,7 @@ ban-relative-imports = "all"
 "tests/**" = ["ANN"]
 "benchmarks/**" = ["ANN", "TID251"]  # benchmarks need parametrize: subtests are not timed separately
 # Literal values copied verbatim from the ratings.cbr.ru search form.
-"src/cbr_ratings/_core/search/search_form.py" = ["E501"]
+"src/cbr_ratings/_core/search/query.py" = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
