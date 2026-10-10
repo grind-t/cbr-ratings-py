@@ -58,7 +58,6 @@ addopts = ["--import-mode=importlib", "--strict-markers", "--strict-config", "-r
 xfail_strict = true
 filterwarnings = ["error"]
 asyncio_mode = "auto"
-markers = ["e2e: hits the live ratings.cbr.ru API"]
 
 [tool.poe.tasks]
 fmt = "ruff format"
