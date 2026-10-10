@@ -18,10 +18,12 @@ import asyncio
 from datetime import date
 
 import cbr_ratings
+import httpx
 
 
 async def main():
-    async with cbr_ratings.CbrRatingsClient() as client:
+    async with httpx.AsyncClient(timeout=30) as http:
+        client = cbr_ratings.CbrRatingsClient(http)
         items = await client.query(
             isin="RU000A1025U5",
             date_from=date(2020, 1, 1),

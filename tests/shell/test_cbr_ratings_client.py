@@ -1,3 +1,4 @@
+import asyncio
 from urllib.parse import parse_qs
 
 import httpx
@@ -133,3 +134,22 @@ async def test_refreshes_rejected_csrf_token():
     items = await client.query()
 
     assert [item.object_id for item in items] == ["1"]
+
+
+async def test_concurrent_queries_do_not_interleave():
+    count = _PAGE_SIZE + 1
+    actions: list[str] = []
+
+    async def handler(request: httpx.Request) -> httpx.Response:
+        if request.method == "GET":
+            return httpx.Response(200, text='{"bitrix_sessid": "token"}')
+        actions.append(request.url.params["action"])
+        await asyncio.sleep(0)
+        return httpx.Response(200, json=_page(["1"], count))
+
+    client = CbrRatingsClient(httpx.AsyncClient(transport=httpx.MockTransport(handler)))
+
+    await asyncio.gather(client.query(), client.query())
+
+    search, page = "searchRating", "searchRatingNavigation"
+    assert actions == [search, page, page, search, page, page]

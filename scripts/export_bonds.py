@@ -3,6 +3,7 @@ import logging
 import os
 from datetime import date
 
+import httpx
 from _export import WINDOW_MONTHS, collect_latest_ratings, months_ago, write_export
 from t_tech.invest import AsyncClient
 
@@ -15,7 +16,8 @@ async def main() -> None:
 
     date_from = months_ago(date.today(), WINDOW_MONTHS)  # noqa: DTZ011
 
-    async with CbrRatingsClient() as client:
+    async with httpx.AsyncClient(timeout=30) as http:
+        client = CbrRatingsClient(http)
 
         async def search(isin: str) -> list[RatingItem]:
             return await client.query(

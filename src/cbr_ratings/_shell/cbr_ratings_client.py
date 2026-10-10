@@ -1,8 +1,7 @@
+import asyncio
 import math
 from collections.abc import Sequence
 from datetime import date
-from types import TracebackType
-from typing import Self
 
 import httpx
 
@@ -29,30 +28,12 @@ _PAGE_SIZE = 100
 
 
 class CbrRatingsClient:
-    """Client of the ratings registry at ratings.cbr.ru.
+    """Client of the ratings registry at ratings.cbr.ru."""
 
-    The CSRF token is fetched once and reused, so keep one instance for many
-    queries. The site keeps the last search in the session cookie, so
-    concurrent queries must not share an instance or an `httpx.AsyncClient`.
-    Use `async with` to close the internally created `httpx.AsyncClient`.
-    """
-
-    def __init__(self, client: httpx.AsyncClient | None = None) -> None:
-        self._own_client = client is None
-        self._client = client or httpx.AsyncClient(timeout=30)
+    def __init__(self, client: httpx.AsyncClient) -> None:
+        self._client = client
         self._csrf_token: str | None = None
-
-    async def __aenter__(self) -> Self:
-        return self
-
-    async def __aexit__(
-        self,
-        exc_type: type[BaseException] | None,
-        exc: BaseException | None,
-        traceback: TracebackType | None,
-    ) -> None:
-        if self._own_client:
-            await self._client.aclose()
+        self._lock = asyncio.Lock()
 
     async def query(
         self,
@@ -87,6 +68,10 @@ class CbrRatingsClient:
             rating_action=rating_action,
             rating_status=rating_status,
         )
+        async with self._lock:
+            return await self._search(query)
+
+    async def _search(self, query: RatingQuery) -> list[RatingItem]:
         first = await self._run_action("searchRating", query.to_string())
 
         if first is None:
