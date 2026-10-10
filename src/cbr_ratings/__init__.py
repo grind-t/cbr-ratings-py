@@ -5,7 +5,12 @@ from cbr_ratings._core.rating.latest_rating import (
     latest_ratings_by_kra,
 )
 from cbr_ratings._core.rating.prediction import Prediction, convert_prediction
-from cbr_ratings._core.rating.rating_item import RatingItem
+from cbr_ratings._core.rating.rating_item import (
+    ObjectTypeCode,
+    PredictionCode,
+    RatingActionCode,
+    RatingItem,
+)
 from cbr_ratings._core.rating.rating_value import RATING_SCALE, rating_value_to_number
 from cbr_ratings._core.rating.withdrawn import is_rating_withdrawn
 from cbr_ratings._core.search.errors import CbrRatingsError
@@ -27,8 +32,11 @@ __all__ = [
     "Kra",
     "KraName",
     "LatestRating",
+    "ObjectTypeCode",
     "Prediction",
+    "PredictionCode",
     "RatingAction",
+    "RatingActionCode",
     "RatingGroup",
     "RatingItem",
     "RatingScale",

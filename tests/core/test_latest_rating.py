@@ -35,7 +35,11 @@ def test_ignores_withdrawn_ratings(make_item):
 
 def test_returns_none_when_all_ratings_are_withdrawn(make_item):
     a = make_item(release_date="01.01.2020", rating_value="рейтинг отозван")
-    b = make_item(release_date="02.02.2021", rating_value="", rating_action="WD")
+    b = make_item(
+        release_date="02.02.2021",
+        rating_value="BBB",
+        rating_action="WD - отзыв кредитного рейтинга",
+    )
 
     assert latest_rating([a, b]) is None
 
@@ -45,17 +49,21 @@ def test_by_kra_returns_empty_dict_for_empty_input():
 
 
 def test_by_kra_returns_the_newest_item_per_kra(make_item):
-    older = make_item(kra_name="АКРА", rating_value="BBB", release_date="01.01.2020")
-    newer = make_item(kra_name="АКРА", rating_value="AA", release_date="05.05.2023")
+    older = make_item(
+        kra_name="АКРА (АО)", rating_value="BBB", release_date="01.01.2020"
+    )
+    newer = make_item(
+        kra_name="АКРА (АО)", rating_value="AA", release_date="05.05.2023"
+    )
 
     assert latest_ratings_by_kra([older, newer]) == {"AKRA": newer}
 
 
 def test_by_kra_groups_items_by_kra(make_item):
-    akra = make_item(kra_name="АКРА", rating_value="AA")
-    nkr = make_item(kra_name="НКР", rating_value="BBB")
-    expert = make_item(kra_name="Эксперт РА", rating_value="A")
-    nra = make_item(kra_name="НРА", rating_value="BB")
+    akra = make_item(kra_name="АКРА (АО)", rating_value="AA")
+    nkr = make_item(kra_name='ООО "НКР"', rating_value="BBB")
+    expert = make_item(kra_name='АО "Эксперт РА"', rating_value="A")
+    nra = make_item(kra_name='ООО "НРА"', rating_value="BB")
 
     assert latest_ratings_by_kra([akra, nkr, expert, nra]) == {
         "AKRA": akra,
@@ -66,8 +74,8 @@ def test_by_kra_groups_items_by_kra(make_item):
 
 
 def test_by_kra_omits_kra_where_all_are_withdrawn(make_item):
-    withdrawn_akra = make_item(kra_name="АКРА", rating_value="Рейтинг отозван")
-    valid_nkr = make_item(kra_name="НКР", rating_value="A")
+    withdrawn_akra = make_item(kra_name="АКРА (АО)", rating_value="Рейтинг отозван")
+    valid_nkr = make_item(kra_name='ООО "НКР"', rating_value="A")
 
     assert latest_ratings_by_kra([withdrawn_akra, valid_nkr]) == {"NKR": valid_nkr}
 
@@ -80,12 +88,12 @@ def test_rating_item_accepts_api_camel_case():
             "koNumber": "",
             "releaseDate": "31.10.2023",
             "inn": "7707083893",
-            "objectType": "",
+            "objectType": "TBND - облигационный займ",
             "ratingValue": "AAA(RU)",
             "prediction": "STA - стабильный",
-            "objectName": "",
+            "objectName": "Эмитент",
             "kraName": "АКРА (АО)",
-            "releaseUrl": "",
+            "releaseUrl": "https://example.com",
             "objectId": "1",
             "isin": "",
             "subjectName": "",

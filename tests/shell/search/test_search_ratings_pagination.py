@@ -10,26 +10,26 @@ _NOT_FOUND = {
 }
 
 
-def _item(isin: str) -> dict:
+def _item(object_id: str) -> dict:
     return {
-        "ratingAction": "",
+        "ratingAction": "AF - подтверждение кредитного рейтинга",
         "country": "РОССИЯ",
         "koNumber": "",
         "releaseDate": "01.01.2000",
         "inn": "",
-        "objectType": "",
+        "objectType": "TBND - облигационный займ",
         "ratingValue": "BBB",
-        "prediction": "",
-        "objectName": "",
-        "kraName": "",
-        "releaseUrl": "",
-        "objectId": "",
-        "isin": isin,
+        "prediction": "STA - стабильный",
+        "objectName": "Эмитент",
+        "kraName": "АКРА (АО)",
+        "releaseUrl": "https://example.com",
+        "objectId": object_id,
+        "isin": "",
         "subjectName": "",
     }
 
 
-def _page(isins: list[str], item_count: int) -> dict:
+def _page(ids: list[str], item_count: int) -> dict:
     return {
         "status": "success",
         "data": {
@@ -38,7 +38,7 @@ def _page(isins: list[str], item_count: int) -> dict:
             "sortingField": "objectName",
             "sortingDirection": "ascending",
             "pageSize": 25,
-            "itemList": [_item(isin) for isin in isins],
+            "itemList": [_item(i) for i in ids],
             "itemCount": item_count,
         },
     }
@@ -73,11 +73,11 @@ async def test_returns_empty_list_when_nothing_is_found():
 
 
 async def test_returns_single_page_without_navigation():
-    client, requested = _client(_page(["A", "B"], 2))
+    client, requested = _client(_page(["1", "2"], 2))
 
     items = await search_ratings(client=client)
 
-    assert [item.isin for item in items] == ["A", "B"]
+    assert [item.object_id for item in items] == ["1", "2"]
     assert requested == []
 
 
@@ -85,18 +85,18 @@ async def test_collects_every_page():
     count = PAGE_SIZE + 1
     page1 = [str(i) for i in range(PAGE_SIZE)]
     client, requested = _client(
-        _page(["first"], count),
-        {1: _page(page1, count), 2: _page(["last"], count)},
+        _page(["0"], count),
+        {1: _page(page1, count), 2: _page(["999"], count)},
     )
 
     items = await search_ratings(client=client)
 
-    assert [item.isin for item in items] == [*page1, "last"]
+    assert [item.object_id for item in items] == [*page1, "999"]
     assert requested == [(1, PAGE_SIZE), (2, PAGE_SIZE)]
 
 
 async def test_raises_on_empty_page():
-    client, _ = _client(_page(["A"], PAGE_SIZE + 1), {1: _NOT_FOUND})
+    client, _ = _client(_page(["1"], PAGE_SIZE + 1), {1: _NOT_FOUND})
 
     with pytest.raises(CbrRatingsError, match="Page 1"):
         await search_ratings(client=client)
