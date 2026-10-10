@@ -13,7 +13,11 @@ from cbr_ratings._core.rating.prediction import (
     convert_prediction,
 )
 from cbr_ratings._core.rating.rating_item import RatingItem
-from cbr_ratings._core.rating.rating_value import RATING_SCALE, rating_value_to_number
+from cbr_ratings._core.rating.rating_value import (
+    RATING_SCALE,
+    RatingValue,
+    rating_value_to_number,
+)
 from cbr_ratings._core.search.errors import CbrRatingsError
 from cbr_ratings._core.search.search_form import (
     SearchFormCountry,
@@ -36,6 +40,7 @@ __all__ = [
     "Prediction",
     "RatingAction",
     "RatingItem",
+    "RatingValue",
     "SearchFormCountry",
     "SearchFormKraName",
     "SearchFormRatingAction",
