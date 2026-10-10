@@ -1,7 +1,6 @@
 from datetime import date
 
 from cbr_ratings._core.rating.latest_rating import (
-    LatestRating,
     latest_rating,
     latest_ratings_by_kra,
 )
@@ -102,11 +101,6 @@ def test_rating_item_accepts_api_camel_case():
     assert item.kra_code == "AKRA"
 
 
-def test_latest_rating_from_item(make_item):
-    item = make_item(
-        rating_code="ruA-", prediction="POS - позитивный", release_date="05.05.2023"
-    )
-
-    assert LatestRating.from_item(item) == LatestRating(
-        value=17, prediction="POS", release_date=date(2023, 5, 5)
-    )
+def test_rating_item_exposes_rating_number(make_item):
+    assert make_item(rating_code="ruA-").rating_number == 17
+    assert make_item(rating_code="Рейтинг отозван").rating_number is None

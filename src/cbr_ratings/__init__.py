@@ -3,7 +3,6 @@ from cbr_ratings._core.rating.action.withdrawn import is_rating_withdrawn
 from cbr_ratings._core.rating.country import Country, convert_country
 from cbr_ratings._core.rating.kra import KraCode, convert_kra_name
 from cbr_ratings._core.rating.latest_rating import (
-    LatestRating,
     latest_rating,
     latest_ratings_by_kra,
 )
@@ -35,7 +34,6 @@ __all__ = [
     "CbrRatingsError",
     "Country",
     "KraCode",
-    "LatestRating",
     "ObjectType",
     "Prediction",
     "RatingAction",

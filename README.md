@@ -54,7 +54,6 @@ last search in the session cookie, so concurrent searches must not share one.
 | `rating_code_to_number(value)` | `"ruAA-"` → `20`, index in `RATING_SCALE` |
 | `convert_prediction(value)` | `"STA - стабильный"` → `"STA"` |
 | `is_rating_withdrawn(value, action)` | Withdrawn by value or `WD` action |
-| `LatestRating.from_item(item)` | Rating value, prediction and date only |
 
 ## Exports
 
