@@ -1,8 +1,8 @@
 import httpx
 import pytest
 
-from cbr_ratings._adapters.cbr_http import CbrHttpSource, fetch_csrf_token
 from cbr_ratings._core.search.query import RatingQuery
+from cbr_ratings._shell.search.cbr_http import CbrHttpSource, fetch_csrf_token
 
 pytestmark = pytest.mark.e2e
 

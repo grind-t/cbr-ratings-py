@@ -1,10 +1,11 @@
+import math
 from collections.abc import Sequence
 from datetime import date
 
 import httpx
 
-from cbr_ratings._adapters.cbr_http import CbrHttpSource
 from cbr_ratings._core.rating.rating_item import RatingItem
+from cbr_ratings._core.search.errors import CbrRatingsError
 from cbr_ratings._core.search.query import RatingQuery
 from cbr_ratings._core.search.search_form import (
     Country,
@@ -15,7 +16,10 @@ from cbr_ratings._core.search.search_form import (
     RatingStatus,
     TypeGroup,
 )
-from cbr_ratings._usecases.search import search_all
+from cbr_ratings._shell.search.cbr_http import CbrHttpSource
+
+# The largest page size the site accepts.
+PAGE_SIZE = 100
 
 
 async def search_ratings(
@@ -58,6 +62,27 @@ async def search_ratings(
 
     if client is None:
         async with httpx.AsyncClient(timeout=30) as own_client:
-            return await search_all(CbrHttpSource(own_client), query)
+            return await _search_all(CbrHttpSource(own_client), query)
 
-    return await search_all(CbrHttpSource(client), query)
+    return await _search_all(CbrHttpSource(client), query)
+
+
+async def _search_all(source: CbrHttpSource, query: RatingQuery) -> list[RatingItem]:
+    """Return every page of results, or an empty list when nothing is found."""
+    page = await source.first_page(query)
+
+    if page is None:
+        return []
+
+    if page.page_count <= 1:
+        return page.item_list
+
+    items: list[RatingItem] = []
+
+    for number in range(1, math.ceil(page.item_count / PAGE_SIZE) + 1):
+        next_page = await source.page(number, PAGE_SIZE)
+        if next_page is None:
+            raise CbrRatingsError(f"Page {number} of the search is empty")
+        items.extend(next_page.item_list)
+
+    return items

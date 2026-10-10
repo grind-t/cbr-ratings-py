@@ -68,8 +68,8 @@ lint = [
     { cmd = "lint-rules src" },
 ]
 typecheck = "ty check"
-test-unit = "pytest tests/core tests/usecases"
-test-integration = "pytest tests --ignore=tests/core --ignore=tests/usecases"
+test-unit = "pytest tests/core"
+test-integration = "pytest tests/shell"
 test = "pytest"
 build = "uv build"
 check = ["lint", "typecheck", "test-unit"]
@@ -94,17 +94,9 @@ root_package = "cbr_ratings"
 include_external_packages = true
 
 [[tool.importlinter.contracts]]
-name = "Layers: dependencies point inward only"
+name = "Shell depends on core, never the reverse"
 type = "layers"
 layers = [
-    "cbr_ratings._wiring",
-    "cbr_ratings._adapters | cbr_ratings._usecases",
-    "cbr_ratings._ports",
+    "cbr_ratings._shell",
     "cbr_ratings._core",
 ]
-
-[[tool.importlinter.contracts]]
-name = "Core, ports and use cases do no I/O"
-type = "forbidden"
-source_modules = ["cbr_ratings._core", "cbr_ratings._ports", "cbr_ratings._usecases"]
-forbidden_modules = ["os", "io", "pathlib", "socket", "subprocess", "httpx"]

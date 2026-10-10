@@ -18,7 +18,7 @@ from cbr_ratings._core.search.search_form import (
     RatingStatus,
     TypeGroup,
 )
-from cbr_ratings._wiring.search import search_ratings
+from cbr_ratings._shell.search.search_ratings import search_ratings
 
 __all__ = [
     "RATING_SCALE",
