@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Annotated
 
-from pydantic import BeforeValidator, Field, StringConstraints
+from pydantic import BeforeValidator, Field, StringConstraints, computed_field
 
 from cbr_ratings._core.rating.action.rating_action import (
     RatingAction,
@@ -13,7 +13,11 @@ from cbr_ratings._core.rating.kra import KraCode, convert_kra_name
 from cbr_ratings._core.rating.object.object_type import ObjectType
 from cbr_ratings._core.rating.object.security_id import SECURITY_ID_PATTERN
 from cbr_ratings._core.rating.prediction import Prediction, convert_prediction
-from cbr_ratings._core.rating.rating_code import RatingCode, convert_rating_code
+from cbr_ratings._core.rating.rating_code import (
+    RatingCode,
+    convert_rating_code,
+    rating_code_to_number,
+)
 from cbr_ratings._core.rating.release.release_date import convert_release_date
 from cbr_ratings._core.rating.release.release_url import convert_release_url
 from cbr_ratings._core.shared.cbr_api_model import CbrApiModel
@@ -57,3 +61,10 @@ class RatingItem(CbrApiModel):
         BeforeValidator(empty_to_none),
     ]
     subject_name: Annotated[str | None, BeforeValidator(empty_to_none)]
+
+    @computed_field
+    @property
+    def rating_number(self) -> int | None:
+        if self.rating_code is None:
+            return None
+        return rating_code_to_number(self.rating_code)
