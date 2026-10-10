@@ -27,10 +27,11 @@ from cbr_ratings._core.search.query import (
     RatingStatusFilter,
     TypeGroupFilter,
 )
-from cbr_ratings._shell.search.search_ratings import search_ratings
+from cbr_ratings._shell.cbr_ratings_client import CbrRatingsClient
 
 __all__ = [
     "RATING_SCALE",
+    "CbrRatingsClient",
     "CbrRatingsError",
     "Country",
     "CountryFilter",
@@ -53,5 +54,4 @@ __all__ = [
     "latest_rating",
     "latest_ratings_by_kra",
     "rating_code_to_number",
-    "search_ratings",
 ]

@@ -6,7 +6,7 @@ from datetime import date
 from _export import WINDOW_MONTHS, collect_latest_ratings, months_ago, write_export
 from t_tech.invest import AsyncClient
 
-from cbr_ratings import RatingItem, search_ratings
+from cbr_ratings import CbrRatingsClient, RatingItem
 
 
 async def main() -> None:
@@ -15,13 +15,15 @@ async def main() -> None:
 
     date_from = months_ago(date.today(), WINDOW_MONTHS)  # noqa: DTZ011
 
-    async def search(isin: str) -> list[RatingItem]:
-        return await search_ratings(
-            isin=isin, date_from=date_from, type_group=["Финансовые инструменты"]
-        )
+    async with CbrRatingsClient() as client:
 
-    isins = sorted({bond.isin for bond in bonds if bond.isin})
-    write_export("bonds.json.br", await collect_latest_ratings(isins, search))
+        async def search(isin: str) -> list[RatingItem]:
+            return await client.query(
+                isin=isin, date_from=date_from, type_group=["Финансовые инструменты"]
+            )
+
+        isins = sorted({bond.isin for bond in bonds if bond.isin})
+        write_export("bonds.json.br", await collect_latest_ratings(isins, search))
 
 
 if __name__ == "__main__":

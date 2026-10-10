@@ -21,11 +21,12 @@ import cbr_ratings
 
 
 async def main():
-    items = await cbr_ratings.search_ratings(
-        isin="RU000A1025U5",
-        date_from=date(2020, 1, 1),
-        type_group=["Финансовые инструменты"],
-    )
+    async with cbr_ratings.CbrRatingsClient() as client:
+        items = await client.query(
+            isin="RU000A1025U5",
+            date_from=date(2020, 1, 1),
+            type_group=["Финансовые инструменты"],
+        )
 
     for kra, item in cbr_ratings.latest_ratings_by_kra(items).items():
         print(
@@ -38,15 +39,17 @@ async def main():
 asyncio.run(main())
 ```
 
-`search_ratings` returns every page of results and an empty list when nothing
-is found. It accepts an optional `client: httpx.AsyncClient`; the site keeps the
-last search in the session cookie, so concurrent searches must not share one.
+`CbrRatingsClient.query` returns every page of results and an empty list when
+nothing is found. The CSRF token is fetched once and reused, so keep one client
+for many queries. The constructor accepts an optional `httpx.AsyncClient`; the
+site keeps the last search in the session cookie, so concurrent queries must not
+share a client.
 
 ## API
 
 | Name | Description |
 | --- | --- |
-| `search_ratings(...)` | Search the registry; all filters of the site's advanced form |
+| `CbrRatingsClient(...).query(...)` | Search the registry; all filters of the site's advanced form |
 | `latest_rating(items)` | Newest non-withdrawn rating |
 | `latest_ratings_by_kra(items)` | Newest non-withdrawn rating per agency |
 | `convert_country(name)` | `"РОССИЯ"` → `"RU"`; international organizations → `"INTL"` |

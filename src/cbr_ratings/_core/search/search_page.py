@@ -2,10 +2,11 @@ from collections.abc import Mapping
 from typing import Any, Self
 
 from cbr_ratings._core.rating.rating_item import RatingItem
-from cbr_ratings._core.search.errors import CbrRatingsError
+from cbr_ratings._core.search.errors import CbrRatingsError, CsrfTokenRejectedError
 from cbr_ratings._core.shared.cbr_api_model import CbrApiModel
 
 _NOT_FOUND_ERROR = {"message": "Array", "code": 0, "customData": None}
+_INVALID_CSRF_CODE = "invalid_csrf"
 
 
 class RatingSearchPage(CbrApiModel):
@@ -23,6 +24,11 @@ class RatingSearchPage(CbrApiModel):
         # The site reports an empty result as this error.
         if body["status"] == "error" and body["errors"] == [_NOT_FOUND_ERROR]:
             return None
+
+        if body["status"] == "error" and any(
+            error.get("code") == _INVALID_CSRF_CODE for error in body["errors"]
+        ):
+            raise CsrfTokenRejectedError(body["errors"])
 
         if body["status"] != "success":
             raise CbrRatingsError(body["errors"])
