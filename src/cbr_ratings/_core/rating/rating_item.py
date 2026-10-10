@@ -9,6 +9,7 @@ from cbr_ratings._core.rating.object.ko_number import KoNumber
 from cbr_ratings._core.rating.object.object_type import ObjectType
 from cbr_ratings._core.rating.object.security_id import SecurityId
 from cbr_ratings._core.rating.prediction import ItemPrediction
+from cbr_ratings._core.rating.rating_value import RatingValue
 from cbr_ratings._core.rating.release.release_date import ReleaseDate
 from cbr_ratings._core.rating.release.release_url import ReleaseUrl
 from cbr_ratings._core.search.search_form import Country, KraName
@@ -24,8 +25,8 @@ class RatingItem(CbrApiModel):
     release_date: ReleaseDate
     inn: Inn
     object_type: ObjectType
-    # Agency notation, e.g. "ruAA-", "AA(RU)", or "Рейтинг отозван".
-    rating_value: _Text
+    # A RATING_SCALE value, or None when the rating is withdrawn.
+    rating_value: RatingValue
     prediction: ItemPrediction
     object_name: _Text
     kra_name: KraName

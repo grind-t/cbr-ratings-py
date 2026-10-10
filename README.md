@@ -30,7 +30,7 @@ async def main():
     for kra, item in cbr_ratings.latest_ratings_by_kra(items).items():
         print(
             kra,
-            cbr_ratings.rating_value_to_number(item.rating_value),
+            item.rating_value,
             cbr_ratings.convert_prediction(item.prediction),
         )
 

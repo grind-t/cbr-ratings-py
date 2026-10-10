@@ -14,6 +14,17 @@ def test_keeps_codes_of_code_and_text_fields(make_item):
     assert item.prediction == "NEG"
 
 
+def test_normalizes_rating_value_to_the_scale_form(make_item, subtests):
+    for raw, expected in {
+        "ruAA-": "AA-",
+        "AA(RU)": "AA",
+        " BBB+ ": "BBB+",
+        "Рейтинг отозван": None,
+    }.items():
+        with subtests.test(raw):
+            assert make_item(rating_value=raw).rating_value == expected
+
+
 def test_empty_optional_fields_become_none(make_item):
     item = make_item(inn="", isin="", ko_number="", subject_name="", prediction="")
 
@@ -49,6 +60,7 @@ def test_rejects_values_outside_the_known_formats(make_item, subtests):
         "ko number": {"ko_number": "12"},
         "object id": {"object_id": "abc"},
         "empty rating value": {"rating_value": ""},
+        "unknown rating value": {"rating_value": "NR"},
     }
 
     for name, overrides in invalid.items():
