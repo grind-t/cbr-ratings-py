@@ -1,5 +1,6 @@
 from cbr_ratings._core.rating.action.rating_action import RatingActionCode
 from cbr_ratings._core.rating.action.withdrawn import is_rating_withdrawn
+from cbr_ratings._core.rating.country import CountryCode, country_name_to_code
 from cbr_ratings._core.rating.kra import KraCode, kra_name_to_code
 from cbr_ratings._core.rating.latest_rating import (
     LatestRating,
@@ -29,6 +30,7 @@ __all__ = [
     "RATING_SCALE",
     "CbrRatingsError",
     "Country",
+    "CountryCode",
     "KraCode",
     "KraName",
     "LatestRating",
@@ -42,6 +44,7 @@ __all__ = [
     "RatingStatus",
     "TypeGroup",
     "convert_prediction",
+    "country_name_to_code",
     "is_rating_withdrawn",
     "kra_name_to_code",
     "latest_rating",

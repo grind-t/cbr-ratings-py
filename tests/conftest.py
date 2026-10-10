@@ -8,7 +8,7 @@ def make_item():
     def make(**overrides) -> RatingItem:
         fields = {
             "rating_action": "AF - подтверждение кредитного рейтинга",
-            "country": "РОССИЯ",
+            "country_code": "РОССИЯ",
             "ko_number": "",
             "release_date": "01.01.2000",
             "inn": "",

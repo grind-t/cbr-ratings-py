@@ -4,6 +4,7 @@ from pydantic import BeforeValidator, Field, StringConstraints
 
 from cbr_ratings._core.rating.action.rating_action import RatingActions
 from cbr_ratings._core.rating.api_values import empty_to_none
+from cbr_ratings._core.rating.country import CountryCode, country_name_to_code
 from cbr_ratings._core.rating.kra import KraCode, kra_name_to_code
 from cbr_ratings._core.rating.object.inn import Inn
 from cbr_ratings._core.rating.object.ko_number import KoNumber
@@ -13,7 +14,6 @@ from cbr_ratings._core.rating.prediction import Prediction, convert_prediction
 from cbr_ratings._core.rating.rating_value import RatingValue
 from cbr_ratings._core.rating.release.release_date import ReleaseDate
 from cbr_ratings._core.rating.release.release_url import ReleaseUrl
-from cbr_ratings._core.search.search_form import Country
 from cbr_ratings._core.shared.cbr_api_model import CbrApiModel
 
 _Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
@@ -21,7 +21,9 @@ _Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 
 class RatingItem(CbrApiModel):
     rating_action: RatingActions
-    country: Country
+    country_code: Annotated[
+        CountryCode, BeforeValidator(country_name_to_code), Field(alias="country")
+    ]
     ko_number: KoNumber
     release_date: ReleaseDate
     inn: Inn
