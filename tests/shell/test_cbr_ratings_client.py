@@ -4,7 +4,8 @@ from urllib.parse import parse_qs
 import httpx
 import pytest
 
-from cbr_ratings import CbrRatingsClient, CbrRatingsError
+from cbr_ratings import CbrRatingsClient
+from cbr_ratings._core.search.errors import CbrRatingsError
 
 _PAGE_SIZE = 100
 _NOT_FOUND = {

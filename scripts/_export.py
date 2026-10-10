@@ -10,12 +10,12 @@ from pathlib import Path
 import brotli
 import httpx
 
-from cbr_ratings import (
-    KraCode,
+from cbr_ratings._core.rating.kra import KraCode
+from cbr_ratings._core.rating.latest_rating import (
     LatestRating,
-    RatingItem,
     latest_ratings_by_kra,
 )
+from cbr_ratings._core.rating.rating_item import RatingItem
 
 EXPORTS_DIR = Path(__file__).parent.parent / "exports"
 # Ratings older than this are considered stale.

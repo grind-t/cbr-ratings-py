@@ -7,7 +7,8 @@ import httpx
 from _export import WINDOW_MONTHS, collect_latest_ratings, months_ago, write_export
 from t_tech.invest import AsyncClient
 
-from cbr_ratings import CbrRatingsClient, RatingItem
+from cbr_ratings import CbrRatingsClient
+from cbr_ratings._core.rating.rating_item import RatingItem
 
 
 async def main() -> None:

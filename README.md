@@ -17,22 +17,22 @@ uv add grind-t-cbr-ratings
 import asyncio
 from datetime import date
 
-import cbr_ratings
 import httpx
+from cbr_ratings import CbrRatingsClient
 
 
 async def main():
     async with httpx.AsyncClient(timeout=30) as http:
-        client = cbr_ratings.CbrRatingsClient(http)
+        client = CbrRatingsClient(http)
         items = await client.query(
             isin="RU000A1025U5",
             date_from=date(2020, 1, 1),
             type_group=["Финансовые инструменты"],
         )
 
-    for kra, item in cbr_ratings.latest_ratings_by_kra(items).items():
+    for item in items:
         print(
-            kra,
+            item.kra_code,
             item.rating_code,
             item.prediction,
         )
