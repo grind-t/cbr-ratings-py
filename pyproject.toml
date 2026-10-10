@@ -67,11 +67,9 @@ lint = [
     { cmd = "lint-rules src" },
 ]
 typecheck = "ty check"
-test-unit = "pytest tests/core"
-test-integration = "pytest tests/shell"
 test = "pytest"
 build = "uv build"
-check = ["lint", "typecheck", "test-unit"]
+check = ["lint", "typecheck", "test"]
 
 [dependency-groups]
 dev = [
