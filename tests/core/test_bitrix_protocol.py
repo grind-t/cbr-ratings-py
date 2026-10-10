@@ -22,14 +22,11 @@ def test_serializes_empty_mapping():
     assert serialize_fields({}) == ""
 
 
-def test_serializes_special_characters():
+def test_percent_encodes_special_and_non_ascii_characters():
     assert (
-        serialize_fields({"a": "c&d", "b": "g h"}) == "fields[a]=c%26d&fields[b]=g%20h"
+        serialize_fields({"a": "c&d", "b": "g h", "c": "АКРА"})
+        == "fields[a]=c%26d&fields[b]=g%20h&fields[c]=%D0%90%D0%9A%D0%A0%D0%90"
     )
-
-
-def test_encodes_cyrillic():
-    assert serialize_fields({"a": "АКРА"}) == "fields[a]=%D0%90%D0%9A%D0%A0%D0%90"
 
 
 def test_serializes_with_custom_prefix():

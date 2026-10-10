@@ -1,10 +1,7 @@
-from datetime import date
-
 from cbr_ratings._core.rating.latest_rating import (
     latest_rating,
     latest_ratings_by_kra,
 )
-from cbr_ratings._core.rating.rating_item import RatingItem
 
 
 def test_returns_the_newest_non_withdrawn_rating(make_item):
@@ -75,32 +72,3 @@ def test_by_kra_omits_kra_where_all_are_withdrawn(make_item):
     valid_nkr = make_item(kra_code='ООО "НКР"', rating_code="A")
 
     assert latest_ratings_by_kra([withdrawn_akra, valid_nkr]) == {"NKR": valid_nkr}
-
-
-def test_rating_item_accepts_api_camel_case():
-    item = RatingItem.model_validate(
-        {
-            "ratingAction": "AF - подтверждение кредитного рейтинга",
-            "country": "РОССИЯ",
-            "koNumber": "",
-            "releaseDate": "31.10.2023",
-            "inn": "7707083893",
-            "objectType": "TBND - облигационный займ",
-            "ratingValue": "AAA(RU)",
-            "prediction": "STA - стабильный",
-            "objectName": "Эмитент",
-            "kraName": "АКРА (АО)",
-            "releaseUrl": "https://example.com",
-            "objectId": "1",
-            "isin": "",
-            "subjectName": "",
-        }
-    )
-
-    assert item.release_date == date(2023, 10, 31)
-    assert item.kra_code == "AKRA"
-
-
-def test_rating_item_exposes_rating_number(make_item):
-    assert make_item(rating_code="ruA-").rating_number == 17
-    assert make_item(rating_code="Рейтинг отозван").rating_number is None

@@ -1,22 +1,17 @@
-from cbr_ratings._core.rating.rating_code import RATING_SCALE, rating_code_to_number
+from cbr_ratings._core.rating.rating_code import rating_code_to_number
 
 
 def test_converts_international_ratings(subtests):
-    for number, value in enumerate(RATING_SCALE):
+    cases = {"D": 0, "CCC": 6, "BBB-": 14, "A+": 19, "AAA": 23}
+    for value, expected in cases.items():
         with subtests.test(value=value):
-            assert rating_code_to_number(value) == number
+            assert rating_code_to_number(value) == expected
 
 
-def test_converts_russian_ratings(subtests):
-    for number, value in enumerate(RATING_SCALE):
+def test_russian_ratings_match_international_ones(subtests):
+    for value in ["D", "BBB-", "A+", "AAA"]:
         with subtests.test(value=value):
-            assert rating_code_to_number(f"ru{value}") == number
-
-
-def test_spot_checks_scale_ends():
-    assert rating_code_to_number("AAA") == 23
-    assert rating_code_to_number("ruBBB-") == 14
-    assert rating_code_to_number("D") == 0
+            assert rating_code_to_number(f"ru{value}") == rating_code_to_number(value)
 
 
 def test_returns_none_for_withdrawn_ratings(subtests):

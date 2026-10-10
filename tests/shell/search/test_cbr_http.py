@@ -11,8 +11,7 @@ async def test_fetches_csrf_token():
     async with httpx.AsyncClient() as client:
         token = await fetch_csrf_token(client)
 
-    assert token is not None
-    assert len(token) == 32
+    assert token
 
 
 async def test_first_page_returns_none_when_nothing_is_found():

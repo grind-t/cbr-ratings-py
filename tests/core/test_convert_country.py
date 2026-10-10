@@ -2,7 +2,7 @@ from typing import get_args
 
 import pytest
 
-from cbr_ratings._core.rating.country import convert_country
+from cbr_ratings._core.rating.country import Country, convert_country
 from cbr_ratings._core.search.query import CountryFilter
 
 
@@ -31,7 +31,7 @@ def test_international_values_share_one_code(subtests):
 def test_converts_every_country_of_the_search_form(subtests):
     for name in get_args(CountryFilter):
         with subtests.test(name=name):
-            assert convert_country(name)
+            assert convert_country(name) in get_args(Country)
 
 
 def test_rejects_unknown_country_names():

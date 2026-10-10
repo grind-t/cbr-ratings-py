@@ -16,10 +16,6 @@ async def test_searches_bond_ratings():
     assert all(item.isin == "RU000A1025U5" for item in items)
 
 
-async def test_returns_empty_list_when_nothing_is_found():
-    assert await search_ratings(isin="XX000A000000") == []
-
-
 async def test_returns_every_page():
     # Sberbank has well over one page of ratings
     items = await search_ratings(inn="7707083893", date_from=date(2015, 1, 1))

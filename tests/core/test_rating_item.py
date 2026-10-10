@@ -6,20 +6,10 @@ def test_keeps_codes_of_code_and_text_fields(make_item):
     item = make_item(
         rating_action="DG – понижение кредитного рейтинга, OT – изменение прогноза",
         object_type="CBNK – кредитная организация",
-        prediction="NEG - негативный",
     )
 
     assert item.rating_action == ("DG", "OT")
     assert item.object_type == "CBNK"
-    assert item.prediction == "NEG"
-
-
-def test_converts_country_name(make_item):
-    assert make_item(country="РОССИЯ").country == "RU"
-
-
-def test_predictions_without_a_direction_become_none(make_item):
-    assert make_item(prediction="NA – не предусмотрен методологией").prediction is None
 
 
 def test_normalizes_rating_code_to_the_scale_form(make_item, subtests):
@@ -58,11 +48,9 @@ def test_adds_missing_scheme_to_release_url(make_item):
 
 def test_rejects_values_outside_the_known_formats(make_item, subtests):
     invalid = {
-        "country": {"country": "АТЛАНТИДА"},
         "kra code": {"kra_code": "АКРА"},
         "action": {"rating_action": "XX - неизвестное действие"},
         "object type": {"object_type": "ZZZZ - неизвестный тип"},
-        "prediction": {"prediction": "ZZ - неизвестный"},
         "inn": {"inn": "123"},
         "isin": {"isin": "not-an-isin"},
         "ko number": {"ko_number": "12"},

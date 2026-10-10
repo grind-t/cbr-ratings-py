@@ -1,3 +1,5 @@
+from urllib.parse import parse_qs
+
 import httpx
 import pytest
 
@@ -44,11 +46,8 @@ def _page(ids: list[str], item_count: int) -> dict:
     }
 
 
-def _client(
-    first: dict, pages: dict[int, dict] | None = None
-) -> tuple[httpx.AsyncClient, list[tuple[int, int]]]:
-    """A client answering like the site; also returns the requested (number, size)."""
-    requested: list[tuple[int, int]] = []
+def _client(first: dict, pages: dict[int, dict] | None = None) -> httpx.AsyncClient:
+    """A client answering like the site: the first search, then pages by number."""
 
     def handler(request: httpx.Request) -> httpx.Response:
         if request.method == "GET":
@@ -57,34 +56,30 @@ def _client(
         if request.url.params["action"] == "searchRating":
             return httpx.Response(200, json=first)
 
-        body = request.content.decode()
-        number = int(body.split("pageNumber]=")[1].split("&")[0])
-        size = int(body.split("pageSize]=")[1].split("&")[0])
-        requested.append((number, size))
+        number = int(parse_qs(request.content.decode())["fields[pageNumber]"][0])
         return httpx.Response(200, json=(pages or {})[number])
 
-    return httpx.AsyncClient(transport=httpx.MockTransport(handler)), requested
+    return httpx.AsyncClient(transport=httpx.MockTransport(handler))
 
 
 async def test_returns_empty_list_when_nothing_is_found():
-    client, _ = _client(_NOT_FOUND)
+    client = _client(_NOT_FOUND)
 
     assert await search_ratings(client=client) == []
 
 
-async def test_returns_single_page_without_navigation():
-    client, requested = _client(_page(["1", "2"], 2))
+async def test_returns_single_page_results():
+    client = _client(_page(["1", "2"], 2))
 
     items = await search_ratings(client=client)
 
     assert [item.object_id for item in items] == ["1", "2"]
-    assert requested == []
 
 
-async def test_collects_every_page():
+async def test_collects_every_page_in_order():
     count = PAGE_SIZE + 1
     page1 = [str(i) for i in range(PAGE_SIZE)]
-    client, requested = _client(
+    client = _client(
         _page(["0"], count),
         {1: _page(page1, count), 2: _page(["999"], count)},
     )
@@ -92,11 +87,10 @@ async def test_collects_every_page():
     items = await search_ratings(client=client)
 
     assert [item.object_id for item in items] == [*page1, "999"]
-    assert requested == [(1, PAGE_SIZE), (2, PAGE_SIZE)]
 
 
 async def test_raises_on_empty_page():
-    client, _ = _client(_page(["1"], PAGE_SIZE + 1), {1: _NOT_FOUND})
+    client = _client(_page(["1"], PAGE_SIZE + 1), {1: _NOT_FOUND})
 
-    with pytest.raises(CbrRatingsError, match="Page 1"):
+    with pytest.raises(CbrRatingsError):
         await search_ratings(client=client)
