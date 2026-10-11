@@ -70,6 +70,9 @@ lint = [
 typecheck = "ty check"
 test = "pytest"
 build = "uv build"
+export-bonds = "python scripts/export_bonds.py"
+export-issuers = "python scripts/export_issuers.py"
+export = ["export-bonds", "export-issuers"]
 check = ["lint", "typecheck", "test"]
 
 [dependency-groups]
