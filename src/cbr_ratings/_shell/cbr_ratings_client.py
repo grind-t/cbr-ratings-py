@@ -33,8 +33,6 @@ _AJAX_URL = "https://ratings.cbr.ru/bitrix/services/main/ajax.php"
 
 # The largest page size the site accepts.
 _PAGE_SIZE = 100
-# Pause before every query to stay polite with the site.
-_REQUEST_DELAY = 0.25
 _ATTEMPTS = 3
 _RETRY_WAIT = wait_exponential(multiplier=5)
 
@@ -86,7 +84,6 @@ class CbrRatingsClient:
             rating_status=rating_status,
         )
         async with self._lock:
-            await asyncio.sleep(_REQUEST_DELAY)
             return await self._search(query)
 
     @retry(

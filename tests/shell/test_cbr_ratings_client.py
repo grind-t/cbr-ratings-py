@@ -18,7 +18,6 @@ _NOT_FOUND = {
 
 @pytest.fixture(autouse=True)
 def _no_pauses(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cbr_ratings_client, "_REQUEST_DELAY", 0)
     monkeypatch.setattr(cbr_ratings_client, "_RETRY_WAIT", wait_none())
 
 
