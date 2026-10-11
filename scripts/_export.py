@@ -11,7 +11,7 @@ from cbr_ratings._core.rating.rating_item import RatingItem
 
 EXPORTS_DIR = Path(__file__).parent.parent / "exports"
 
-_ADAPTER = TypeAdapter(dict[str, dict[KraCode, RatingItem]])
+_EXPORT_SCHEMA = TypeAdapter(dict[str, dict[KraCode, RatingItem]])
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +21,6 @@ def stale_cutoff_date() -> date:
 
 
 def write_export(name: str, ratings: dict[str, dict[KraCode, RatingItem]]) -> None:
-    payload = _ADAPTER.dump_json(dict(sorted(ratings.items())))
+    payload = _EXPORT_SCHEMA.dump_json(dict(sorted(ratings.items())))
     (EXPORTS_DIR / name).write_bytes(brotli.compress(payload))
     logger.info("Wrote %d entries to %s", len(ratings), name)
