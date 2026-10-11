@@ -1,11 +1,9 @@
 import asyncio
 import logging
 import os
-from datetime import date
 
 import httpx
-from _export import WINDOW_MONTHS, write_export
-from dateutil.relativedelta import relativedelta
+from _export import stale_cutoff_date, write_export
 from moex import get_moex_bond_securities
 from t_tech.invest import AsyncClient
 
@@ -32,7 +30,7 @@ async def main() -> None:
         else:
             logger.warning("Missing issuer inn for bond with isin %s", bond.isin)
 
-    date_from = date.today() - relativedelta(months=WINDOW_MONTHS)  # noqa: DTZ011
+    date_from = stale_cutoff_date()
 
     async with httpx.AsyncClient(timeout=30) as http:
         client = CbrRatingsClient(http)

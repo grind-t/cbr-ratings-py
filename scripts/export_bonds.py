@@ -1,11 +1,9 @@
 import asyncio
 import logging
 import os
-from datetime import date
 
 import httpx
-from _export import WINDOW_MONTHS, write_export
-from dateutil.relativedelta import relativedelta
+from _export import stale_cutoff_date, write_export
 from t_tech.invest import AsyncClient
 
 from cbr_ratings import CbrRatingsClient
@@ -20,7 +18,7 @@ async def main() -> None:
     async with AsyncClient(os.environ["T_INVEST_READONLY_TOKEN"]) as t_invest:
         bonds = (await t_invest.instruments.bonds()).instruments
 
-    date_from = date.today() - relativedelta(months=WINDOW_MONTHS)  # noqa: DTZ011
+    date_from = stale_cutoff_date()
 
     async with httpx.AsyncClient(timeout=30) as http:
         client = CbrRatingsClient(http)

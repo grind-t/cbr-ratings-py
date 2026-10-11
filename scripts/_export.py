@@ -1,17 +1,21 @@
 import json
 import logging
+from datetime import date
 from pathlib import Path
 
 import brotli
+from dateutil.relativedelta import relativedelta
 
 from cbr_ratings._core.rating.kra import KraCode
 from cbr_ratings._core.rating.rating_item import RatingItem
 
 EXPORTS_DIR = Path(__file__).parent.parent / "exports"
-# Ratings older than this are considered stale.
-WINDOW_MONTHS = 9
 
 logger = logging.getLogger(__name__)
+
+
+def stale_cutoff_date() -> date:
+    return date.today() - relativedelta(months=9)  # noqa: DTZ011
 
 
 def write_export(name: str, ratings: dict[str, dict[KraCode, RatingItem]]) -> None:
