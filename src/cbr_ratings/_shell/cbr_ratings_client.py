@@ -6,8 +6,8 @@ from datetime import date
 
 import httpx
 from tenacity import (
-    AsyncRetrying,
     before_sleep_log,
+    retry,
     retry_if_exception_type,
     stop_after_attempt,
     wait_exponential,
@@ -87,20 +87,15 @@ class CbrRatingsClient:
         )
         async with self._lock:
             await asyncio.sleep(_REQUEST_DELAY)
-            return await self._search_with_retries(query)
+            return await self._search(query)
 
-    async def _search_with_retries(self, query: RatingQuery) -> list[RatingItem]:
-        async for attempt in AsyncRetrying(
-            retry=retry_if_exception_type(httpx.HTTPError),
-            stop=stop_after_attempt(_ATTEMPTS),
-            wait=_RETRY_WAIT,
-            before_sleep=before_sleep_log(_logger, logging.WARNING, exc_info=True),
-            reraise=True,
-        ):
-            with attempt:
-                return await self._search(query)
-        raise AssertionError("unreachable")
-
+    @retry(
+        retry=retry_if_exception_type(httpx.HTTPError),
+        stop=stop_after_attempt(_ATTEMPTS),
+        wait=_RETRY_WAIT,
+        before_sleep=before_sleep_log(_logger, logging.WARNING, exc_info=True),
+        reraise=True,
+    )
     async def _search(self, query: RatingQuery) -> list[RatingItem]:
         first = await self._run_action("searchRating", query.to_string())
 
