@@ -4,12 +4,14 @@ import os
 from datetime import date
 
 import httpx
-from _export import WINDOW_MONTHS, collect_latest_ratings, write_export
+from _export import WINDOW_MONTHS, write_export
 from dateutil.relativedelta import relativedelta
 from moex import get_moex_bond_securities
 from t_tech.invest import AsyncClient
 
 from cbr_ratings import CbrRatingsClient
+from cbr_ratings._core.rating.kra import KraCode
+from cbr_ratings._core.rating.latest_rating import latest_ratings_by_kra
 from cbr_ratings._core.rating.rating_item import RatingItem
 
 logger = logging.getLogger(__name__)
@@ -35,8 +37,10 @@ async def main() -> None:
     async with httpx.AsyncClient(timeout=30) as http:
         client = CbrRatingsClient(http)
 
-        async def search(inn: str) -> list[RatingItem]:
-            return await client.query(
+        ratings: dict[str, dict[KraCode, RatingItem]] = {}
+
+        for inn in sorted(inns):
+            items = await client.query(
                 inn=inn,
                 date_from=date_from,
                 type_group=[
@@ -50,9 +54,14 @@ async def main() -> None:
                 ],
             )
 
-        write_export(
-            "issuers.json.br", await collect_latest_ratings(sorted(inns), search)
-        )
+            if not items:
+                logger.info("Missing ratings for %s", inn)
+                continue
+
+            if by_kra := latest_ratings_by_kra(items):
+                ratings[inn] = by_kra
+
+        write_export("issuers.json.br", ratings)
 
 
 if __name__ == "__main__":
