@@ -41,43 +41,13 @@ async def main():
 asyncio.run(main())
 ```
 
-`CbrRatingsClient.query` returns every page of results and an empty list when
-nothing is found. The CSRF token is fetched once and reused, so keep one client
-for many queries. The constructor accepts an optional `httpx.AsyncClient`; the
-site keeps the last search in the session cookie, so concurrent queries must not
-share a client.
-
 ## API
 
 | Name | Description |
 | --- | --- |
 | `CbrRatingsClient(...).query(...)` | Search the registry; all filters of the site's advanced form |
-| `latest_rating(items)` | Newest non-withdrawn rating |
+| `RatingItem` | Pydantic model of one registry row; the type of items returned by `query` |
+| `latest_rating(items)` | Newest non-withdrawn rating, or `None` |
 | `latest_ratings_by_kra(items)` | Newest non-withdrawn rating per agency |
-| `convert_country(name)` | `"РОССИЯ"` → `"RU"`; international organizations → `"INTL"` |
-| `convert_kra_name(name)` | `"АКРА (АО)"` → `"AKRA"` |
-| `rating_code_to_number(value)` | `"ruAA-"` → `20`, index in `RATING_SCALE` |
-| `convert_prediction(value)` | `"STA - стабильный"` → `"STA"` |
-| `is_rating_withdrawn(value, action)` | Withdrawn by value or `WD` action |
 
-## Exports
-
-A weekly workflow publishes the latest rating of every agency for bonds traded
-on T-Invest, as Brotli-compressed JSON:
-
-- [`exports/bonds.json.br`](exports/bonds.json.br): keyed by ISIN
-- [`exports/issuers.json.br`](exports/issuers.json.br): keyed by issuer INN
-
-```json
-{"RU000A1025U5": {"AKRA": {"value": 23, "prediction": "STA", "release_date": "2026-03-01"}}}
-```
-
-`value` is the index in `RATING_SCALE` (`null` when it is not on the scale), and
-agencies are `AKRA`, `NKR`, `EXPERT_RA` and `NRA`.
-
-Run an export locally with `T_INVEST_READONLY_TOKEN` set:
-
-```sh
-uv run scripts/export_bonds.py
-uv run scripts/export_issuers.py
-```
+All of them are importable from the package root: `from cbr_ratings import ...`.

@@ -6,9 +6,8 @@ import httpx
 from _export import stale_cutoff_date, write_export
 from t_tech.invest import AsyncClient
 
-from cbr_ratings import CbrRatingsClient
+from cbr_ratings import CbrRatingsClient, latest_ratings_by_kra
 from cbr_ratings._core.rating.kra import KraCode
-from cbr_ratings._core.rating.latest_rating import latest_ratings_by_kra
 from cbr_ratings._core.rating.rating_item import RatingItem
 
 logger = logging.getLogger(__name__)

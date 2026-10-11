@@ -8,13 +8,13 @@ RatingCode = Literal[
     "BB", "BB+", "BBB-", "BBB", "BBB+", "A-", "A", "A+", "AA-", "AA", "AA+", "AAA",
 ]  # fmt: skip
 
-RATING_SCALE = get_args(RatingCode)
+_RATING_SCALE = get_args(RatingCode)
 
 _RATING_RE = re.compile(r"[A-D]{1,3}[+-]?", re.IGNORECASE)
 
 
 def rating_code_to_number(
-    value: str, scale: tuple[str, ...] = RATING_SCALE
+    value: str, scale: tuple[str, ...] = _RATING_SCALE
 ) -> int | None:
     match = _RATING_RE.search(value)
     if match is None or match[0] not in scale:
@@ -23,14 +23,14 @@ def rating_code_to_number(
 
 
 def convert_rating_code(value: str) -> RatingCode | None:
-    """Strip the agency notation ("ruAA-", "AA(RU)") down to a RATING_SCALE value.
+    """Strip the agency notation ("ruAA-", "AA(RU)") down to a _RATING_SCALE value.
 
     A withdrawn rating becomes None; any other value off the scale is an error.
     """
     if is_rating_withdrawn(value.strip()):
         return None
     match = _RATING_RE.search(value)
-    for rating_code in RATING_SCALE:
+    for rating_code in _RATING_SCALE:
         if match is not None and match[0] == rating_code:
             return rating_code
     raise ValueError(f"unknown rating value: {value!r}")
