@@ -1,9 +1,17 @@
 import asyncio
+import logging
 import math
 from collections.abc import Sequence
 from datetime import date
 
 import httpx
+from tenacity import (
+    AsyncRetrying,
+    before_sleep_log,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
 
 from cbr_ratings._core.rating.rating_item import RatingItem
 from cbr_ratings._core.search.bitrix_protocol import parse_csrf_token, serialize_fields
@@ -25,6 +33,12 @@ _AJAX_URL = "https://ratings.cbr.ru/bitrix/services/main/ajax.php"
 
 # The largest page size the site accepts.
 _PAGE_SIZE = 100
+# Pause before every query to stay polite with the site.
+_REQUEST_DELAY = 0.25
+_ATTEMPTS = 3
+_RETRY_WAIT = wait_exponential(multiplier=5)
+
+_logger = logging.getLogger(__name__)
 
 
 class CbrRatingsClient:
@@ -52,7 +66,10 @@ class CbrRatingsClient:
         rating_action: Sequence[RatingActionFilter] | None = None,
         rating_status: Sequence[RatingStatusFilter] | None = None,
     ) -> list[RatingItem]:
-        """Search the ratings registry and return every page of results."""
+        """Search the ratings registry and return every page of results.
+
+        Network errors are retried, the whole search at a time.
+        """
         query = RatingQuery(
             date_from=date_from,
             date_to=date_to,
@@ -69,7 +86,20 @@ class CbrRatingsClient:
             rating_status=rating_status,
         )
         async with self._lock:
-            return await self._search(query)
+            await asyncio.sleep(_REQUEST_DELAY)
+            return await self._search_with_retries(query)
+
+    async def _search_with_retries(self, query: RatingQuery) -> list[RatingItem]:
+        async for attempt in AsyncRetrying(
+            retry=retry_if_exception_type(httpx.HTTPError),
+            stop=stop_after_attempt(_ATTEMPTS),
+            wait=_RETRY_WAIT,
+            before_sleep=before_sleep_log(_logger, logging.WARNING, exc_info=True),
+            reraise=True,
+        ):
+            with attempt:
+                return await self._search(query)
+        raise AssertionError("unreachable")
 
     async def _search(self, query: RatingQuery) -> list[RatingItem]:
         first = await self._run_action("searchRating", query.to_string())

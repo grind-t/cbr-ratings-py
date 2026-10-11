@@ -3,15 +3,23 @@ from urllib.parse import parse_qs
 
 import httpx
 import pytest
+from tenacity import wait_none
 
 from cbr_ratings import CbrRatingsClient
 from cbr_ratings._core.search.errors import CbrRatingsError
+from cbr_ratings._shell import cbr_ratings_client
 
 _PAGE_SIZE = 100
 _NOT_FOUND = {
     "status": "error",
     "errors": [{"message": "Array", "code": 0, "customData": None}],
 }
+
+
+@pytest.fixture(autouse=True)
+def _no_pauses(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(cbr_ratings_client, "_REQUEST_DELAY", 0)
+    monkeypatch.setattr(cbr_ratings_client, "_RETRY_WAIT", wait_none())
 
 
 def _item(object_id: str) -> dict:
@@ -156,3 +164,32 @@ async def test_concurrent_queries_do_not_interleave():
     assert actions[0] == "searchRating"
     assert "searchRating" not in actions[1:half]
     assert actions[:half] == actions[half:]
+
+
+async def test_retries_network_errors():
+    failures = iter([True, True, False])
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.method == "GET":
+            return httpx.Response(200, text='{"bitrix_sessid": "token"}')
+        if next(failures):
+            raise httpx.ConnectError("boom")
+        return httpx.Response(200, json=_page(["1"], 1))
+
+    client = CbrRatingsClient(httpx.AsyncClient(transport=httpx.MockTransport(handler)))
+
+    items = await client.query()
+
+    assert [item.object_id for item in items] == ["1"]
+
+
+async def test_raises_when_network_errors_persist():
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.method == "GET":
+            return httpx.Response(200, text='{"bitrix_sessid": "token"}')
+        raise httpx.ConnectError("boom")
+
+    client = CbrRatingsClient(httpx.AsyncClient(transport=httpx.MockTransport(handler)))
+
+    with pytest.raises(httpx.ConnectError):
+        await client.query()
