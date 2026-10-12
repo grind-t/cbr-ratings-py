@@ -25,14 +25,10 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = "cbr_ratings"
 
-# The official T-Invest SDK is not on PyPI.
-[[tool.uv.index]]
-name = "tbank"
-url = "https://opensource.tbank.ru/api/v4/projects/238/packages/pypi/simple"
-explicit = true
-
 [tool.uv.sources]
-t-tech-investments = { index = "tbank" }
+# The official T-Invest SDK is not on PyPI, and opensource.tbank.ru is
+# temporarily unavailable, so the wheel is vendored in the repo.
+t-tech-investments = { path = "vendor/t_tech_investments-1.51.0-py3-none-any.whl" }
 
 [tool.ruff.lint]
 select = [
