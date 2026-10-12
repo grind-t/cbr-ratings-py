@@ -6,8 +6,7 @@ import brotli
 from dateutil.relativedelta import relativedelta
 from pydantic import TypeAdapter
 
-from cbr_ratings._core.rating.kra import KraCode
-from cbr_ratings._core.rating.rating_item import RatingItem
+from cbr_ratings import KraCode, RatingItem
 
 EXPORTS_DIR = Path(__file__).parent.parent / "exports"
 

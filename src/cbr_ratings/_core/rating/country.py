@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, get_args
 
 # ISO 3166-1 alpha-2 codes, plus INTL (not ISO) for international organizations
 # and companies, which have no country.
@@ -41,6 +41,8 @@ _COUNTRY_BY_NAME: dict[str, Country] = {
     "Международные организации и институты": "INTL",
     "Международные компании САР (остров Русский, остров Октябрьский)": "INTL",
     "международная финансовая организация": "INTL",
+    # a code maps to itself, so a dumped RatingItem validates back
+    **{code: code for code in get_args(Country)},
 }
 
 

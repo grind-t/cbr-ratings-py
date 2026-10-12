@@ -46,7 +46,9 @@ asyncio.run(main())
 | Name | Description |
 | --- | --- |
 | `CbrRatingsClient(...).query(...)` | Search the registry; all filters of the site's advanced form |
-| `RatingItem` | Pydantic model of one registry row; the type of items returned by `query` |
+| `RatingItem` | Pydantic model of one registry row; the type of items returned by `query`. Also validates its own dump, e.g. the files in `exports/` |
+| `KraCode` | Credit rating agency code: `AKRA`, `NKR`, `EXPERT_RA`, `NRA` |
+| `Prediction` | Rating outlook code: `STA`, `POS`, `NEG`, `DEV` |
 | `latest_rating(items)` | Newest non-withdrawn rating, or `None` |
 | `latest_ratings_by_kra(items)` | Newest non-withdrawn rating per agency |
 

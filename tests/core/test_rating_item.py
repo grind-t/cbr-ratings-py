@@ -1,6 +1,8 @@
 import pytest
 from pydantic import ValidationError
 
+from cbr_ratings import RatingItem
+
 
 def test_keeps_codes_of_code_and_text_fields(make_item):
     item = make_item(
@@ -46,6 +48,12 @@ def test_adds_missing_scheme_to_release_url(make_item):
     assert make_item(release_url="example.com/a").release_url == "https://example.com/a"
 
 
+def test_validates_its_own_dump(make_item):
+    item = make_item()
+
+    assert RatingItem.model_validate_json(item.model_dump_json()) == item
+
+
 def test_rejects_values_outside_the_known_formats(make_item, subtests):
     invalid = {
         "kra code": {"kra_code": "АКРА"},
@@ -57,6 +65,9 @@ def test_rejects_values_outside_the_known_formats(make_item, subtests):
         "object id": {"object_id": "abc"},
         "empty rating value": {"rating_code": ""},
         "unknown rating value": {"rating_code": "NR"},
+        "release date timestamp": {"release_date": 1750000000},
+        "release date with time": {"release_date": "2026-06-23T00:00:00"},
+        "compact release date": {"release_date": "20260623"},
     }
 
     for name, overrides in invalid.items():

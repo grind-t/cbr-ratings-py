@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, get_args
 
 KraCode = Literal["AKRA", "NKR", "EXPERT_RA", "NRA"]
 
@@ -7,6 +7,8 @@ _KRA_BY_NAME: dict[str, KraCode] = {
     'ООО "НКР"': "NKR",
     'АО "Эксперт РА"': "EXPERT_RA",
     'ООО "НРА"': "NRA",
+    # a code maps to itself, so a dumped RatingItem validates back
+    **{code: code for code in get_args(KraCode)},
 }
 
 
